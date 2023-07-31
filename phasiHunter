@@ -1,0 +1,58 @@
+#!/bin/bash
+# ----------> declaration variables <------------
+tmp=`which phasiHunter`
+wd=${tmp%/*}
+
+# ----------> parament capture start <------------
+if [ "$#" -eq 0 ] ; then echo -e "type ${0##*/} -h for help message"
+    exit 1
+fi
+if [ $1 = '-h' ]
+then
+echo "Usage:
+    phasiHunter subcommand options 
+
+subcommand:
+    preprocess:     generating map file for phasiRNA cluster prediction
+    phase:          predicting phasiRNA cluster based on multiple reference sequences
+    intergration:   intergrating phase module output
+    visulization:   for phasiRNA cluster visulization
+    target:         for sRNA target gene prediction
+    initiator:      for phasiRNA initiator prediction
+    deg:            for phasiRNA initiator or phasiRNA target gene verrification based on degradome verrification
+
+type phasiHunter subcommad -h for more subcommad detail"
+exit 1
+fi
+
+if [ "$#" -gt 0 ]
+    then
+    for (( i=1; i<="$#"; i++ )) ; do
+        case ${!i} in
+            -v)
+                echo "phasiHunter version 1.0"
+                exit 1
+                ;;
+        esac
+    done
+fi
+# ----------> parament capture end<------------
+
+tmp=(`echo $@`)
+parament=${tmp[@]:1:$#}
+
+[ $1 != 'preprocess' ] || bash $wd/bin/preprocess.sh $parament
+[ $1 != 'phase' ] || python3 $wd/bin/phase.py $parament
+[ $1 != 'integration' ] || python3 $wd/bin/integration.py $parament
+[ $1 != 'visulization' ] || python3 $wd/bin/visualization.py $parament
+[ $1 != 'initiator' ] || python3 $wd/bin/initiator.py $parament
+if [ $1 = 'target' ]; then
+    if [[ $parament == *-t* ]]; then
+        perl $wd/bin/TarHunterL_Modified.pl $parament
+    else
+        perl $wd/bin/TarHunterL_Modified.pl $parament "-t"
+    fi
+fi
+# [ $1 != 'target' ] || perl $wd/bin/TarHunterL.pl $parament
+[ $1 != 'deg' ] || python3 $wd/bin/deg.py $parament
+[ $1 != 'read' ] || python3 $wd/bin/readstdin.py $parament

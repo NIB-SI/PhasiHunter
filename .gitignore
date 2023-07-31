@@ -1,0 +1,6 @@
+bin/**/*.pyc
+**/*.json
+**/*.tmp
+**/*.txt
+**/*.DS_Store
+**/*.vscode/**
