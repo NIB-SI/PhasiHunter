@@ -2,7 +2,7 @@
 welcome to phasihunter 😉
 a multithreaded program for mining phasiRNA regulation pathways based on multiple reference sequences
 
-![](https://sandbox-1314381151.cos.ap-nanjing.myqcloud.com/pic/202306122137212.png)
+![image.png|425](https://sandbox-1314381151.cos.ap-nanjing.myqcloud.com/pic/202307312031023.png)
 
 # table of contents
 - dependencies 
