@@ -210,7 +210,7 @@ def SplitClusterIsland(cluster, island_number, phase_length):
         else:
             count += 1
             last = i
-            # dic[count].append(i)
+            dic[count].append(i)
     return dic
 
 def SplitCluster(final_cluster: list, island_number=5, phase_length=21):
@@ -2047,7 +2047,7 @@ def overlapIntergenic(tmp_fo_intergration, tmp_Intergenic, tmp_Intergenic1, tmp_
 
 
 def Integration_overlap(overlap_Intergenic_fo, fo_intergration_tmp, passP):
-    fo_intergration_tmp.write(f'cluster_number\tfeature\tgeneid\tmethod\treference_type\th_transcriptome_coordinate\th_genome_coordinate\th_fl_transcriptome_coordinate\tp_transcriptome_coordinate\tp_genome_coordinate\tp_fl_transcriptome_coordinate\tc_pvalue\tg_pvalue\tf_pvalue\tc_phaseratio\tg_phaseratio\tf_phaseratio\tc_phasescore\tg_phasescore\tf_phasescore\n')
+    fo_intergration_tmp.write(f'cluster_number\tfeature\tPHAS_gene\tmethod\treference_type\th_transcriptome_coordinate\th_genome_coordinate\th_fl_transcriptome_coordinate\tp_transcriptome_coordinate\tp_genome_coordinate\tp_fl_transcriptome_coordinate\tc_pvalue\tg_pvalue\tf_pvalue\tc_phaseratio\tg_phaseratio\tf_phaseratio\tc_phasescore\tg_phasescore\tf_phasescore\n')
     for i in overlap_Intergenic_fo:
         l = i.strip().split("\t")
         geneid_, start, end, cluster_number, method, h_genome_coordinate, p_genome_coordinate, g_pvalue, g_phaseratio, g_phasescore = \

@@ -1408,7 +1408,7 @@ def Extract_cluster_seq(chr, beg, end, cluster_num, seq_dic):
     out_str = '>'+chr+'_'+str(cluster_num)+"\t"+str(beg)+"\t"+str(end)+"\n"+seq
     return out_str
 
-def BuildIndex(tmpfile, threads):
+def BuildIndex(tmpfile):
     """build index
 
     Parameters
@@ -1425,11 +1425,11 @@ def BuildIndex(tmpfile, threads):
     basename = tuple_[1]
     cmd = '[ -e ' + wd + '/.phasiHuter_bowtieIndex ] || mkdir ' + wd + '/.phasiHuter_bowtieIndex'
     os.system(cmd)
-    cmd = f'[ -e {wd}/.phasiHuter_bowtieIndex/{basename}.1.ebwt ] || bowtie-build --threads {threads} {tmpfile} {wd}/.phasiHuter_bowtieIndex/{basename} > /dev/null 2>&1'
+    cmd = f'[ -e {wd}/.phasiHuter_bowtieIndex/{basename}.1.ebwt ] || bowtie-build {tmpfile} {wd}/.phasiHuter_bowtieIndex/{basename} > /dev/null 2>&1'
     os.system(cmd)
     return wd + '/.phasiHuter_bowtieIndex/' + basename
 
-def LoadPhaseScoreData(type: str, map, ref, phase_length, extended_maplen, tmp_file, max_hits, real_gdna_map, fa, threads):    
+def LoadPhaseScoreData(type: str, map, ref, phase_length, extended_maplen, tmp_file, max_hits, real_gdna_map, fa):    
     """loading phase Score data, ParallelPhaseScore first step
 
     Parameters
@@ -1458,7 +1458,7 @@ def LoadPhaseScoreData(type: str, map, ref, phase_length, extended_maplen, tmp_f
         PrePhasiScoreAnalysis(dna_mapDic, refDNA)
     elif type == 'gdna':
         GeneratingSRNACluster(ref, map, phase_length, extended_maplen, tmp_file)
-        index = BuildIndex(tmp_file, threads)
+        index = BuildIndex(tmp_file)
         cmd = f'bowtie -f -a -v 0 -m {max_hits} {index} {fa} {real_gdna_map} > /dev/null 2>&1'
         os.system(cmd)
         dna_mapDic = ParsePhaseScoreMap(real_gdna_map)
@@ -1547,7 +1547,7 @@ def ParallelPhaseScore(parallel_number, type_, mapfile, ref, phase_length, exten
     all : io
     """
     futures = []
-    mapDic = LoadPhaseScoreData(type_, mapfile, ref, phase_length, extended_maplen, tmpfile, max_hits, real_gdna_map, fa, parallel_number)
+    mapDic = LoadPhaseScoreData(type_, mapfile, ref, phase_length, extended_maplen, tmpfile, max_hits, real_gdna_map, fa)
     process_poll = ProcessPoolExecutor(max_workers = parallel_number)
     for k in mapDic:
         tuple = (mapDic[k], phase_length, k, phase_number, phaseScore_cutoff, phaseRatio_cutoff, island*phase_length, type_)
