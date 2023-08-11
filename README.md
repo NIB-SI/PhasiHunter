@@ -1,17 +1,17 @@
 # phasihunter
-welcome to phasihunter 😉
-a multithreaded program for mining phasiRNA regulation pathways based on multiple reference sequences
+Welcome to phasihunter 😉
+A multithreaded program for mining phasiRNA regulation pathways based on multiple reference sequences
 
 ![image.png|425](https://sandbox-1314381151.cos.ap-nanjing.myqcloud.com/pic/202307312031023.png)
 
-# table of contents
-- dependencies 
-- installation
-- use case
-- copyright
+## Table of contents
+- Dependencies 
+- Installation
+- Use case
+- Copyright
 
-# dependencies
-phasihunter is a CLI program runing on linux platform. the correction runing of phasihunter depends on some existing software.
+## Dependencies
+phasihunter is a CLI program runing on linux platform. The correction runing of phasihunter depends on some existing softwares.
 - bowtie
 - biopython
 - bedtools
@@ -21,7 +21,7 @@ phasihunter is a CLI program runing on linux platform. the correction runing of 
 - perl5
 - fasta36
 
-# installation
+# Installation
 1. clone phasihunter
 `git clone https://github.com/HuangLab-CBI/PhasiHunter.git .`
 
