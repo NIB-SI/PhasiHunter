@@ -217,7 +217,6 @@ def ParseHypergeometricMap(map, phase_length):
             if sRNA_len == phase_length:
                 genewithhits[key]=str(no)+'\t'+sRNA+'\t'+line1[4]+'\t'+str(sRNA_len)
             elif genewithhits[key].split('\t')[3] == str(phase_length):
-                #WARNING: bug 来源地,因为这里只是保留了phase length，但是没有保留和phase length 相匹配的序列， 因此sRNA序列被覆盖了，所以结果表现出 输出的序列和打印的序列长度不一致的情况。
                 seq = genewithhits[key].split('\t')[2]
                 genewithhits[key]=str(no)+'\t'+sRNA+'\t'+ seq +'\t'+str(phase_length)
             else:

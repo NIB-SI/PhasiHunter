@@ -53,6 +53,5 @@ if [ $1 = 'target' ]; then
         perl $wd/bin/TarHunterL_Modified.pl $parament "-t"
     fi
 fi
-# [ $1 != 'target' ] || perl $wd/bin/TarHunterL.pl $parament
 [ $1 != 'deg' ] || python3 $wd/bin/deg.py $parament
 [ $1 != 'read' ] || python3 $wd/bin/readstdin.py $parament

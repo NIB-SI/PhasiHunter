@@ -2173,7 +2173,6 @@ def WriteIntergration_new_dup(intergration, tmp_gff_bed, relation_dic, intergrat
                                     continue
                                 if Overlap(coor, coor1, method+ref, method1+ref1, gene, trans):
                                     method_ref.append(method1+ref1)
-                                    # WARNING: 好像是冗余的
                                     if ref == 'C' and method == 'H':
                                         c_transcript_start = coor[0]
                                         c_transcript_end = coor[1]
@@ -2363,7 +2362,6 @@ def WriteIntergration_new_dup(intergration, tmp_gff_bed, relation_dic, intergrat
                                     continue
                                 if Overlap(coor, coor1, method+ref, method1+ref1, gene, trans):
                                     method_ref.append(method1+ref1)
-                                    # WARNING: 好像是冗余的
                                     if ref == 'F' and method == 'H':
                                         c_transcript_start = coor[0]
                                         c_transcript_end = coor[1]
@@ -2571,7 +2569,6 @@ def Intergenic_PHAS_Loci(intergrationfile, tag_dic):
                                     continue
                                 if Overlap(coor, coor1, method+ref, method1+ref1, gene, trans):
                                     method_ref.append(method1+ref1)
-                                    # WARNING: 好像是冗余的
                                     if ref == 'G' and method == 'H':
                                         c_genome_start = coor[0]
                                         c_genome_end = coor[1]

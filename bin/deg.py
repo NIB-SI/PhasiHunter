@@ -14,6 +14,9 @@ from customeDic import *
 @Contact :   zrfeng1@gmail.com
 @License :   (C)Copyright 2022-, NJAU-CBI
 @Desc    :   None
+
+// designed by Ji Huang, CBG, NJAU; revised by Yuhan Fei, Baoyi Zhang and Zerong Feng; 
+    http://cbi.njau.edu.cn
 '''
 # --------------------------------------------------------------> DEFAULT VARIABLE <---------------------------------------------------------------- #
 start_time = time.time()
@@ -26,8 +29,6 @@ less = 'n'
 outfoldername='./'
 initiator = 'n'
 help = '''
-// designed by Ji Huang, CBG, NJAU; revised by Yuhan Fei, Baoyi Zhang and Zerong Feng; 
-    http://cbi.njau.edu.cn
 // function: vertified the sRNA - Target interaction with degradome data
 
     options:
@@ -101,14 +102,6 @@ if 'SHIFT' in dir():
         shifts.append(-i)
         shifts.append(i)
 
-#######################################--> test module <--###############################################
-# test block, you can delete me anytime and anywhere or you can leave me for debug next time
-#  inp = '/home/riceUsers/fzr/new_pipline_test/result/cdna_m10_1e-05_phasiRNA.fa'
-#  mapfile = '/home/riceUsers/fzr/new_pipline_test/degradome_data/outdir/GSM1040650/GSM1040650_norm_filter.map'
-#  psRNAfile = '/home/riceUsers/fzr/new_pipline_test/result/psRNATargetJob-1664868827125964.txt'
-#  targetfa = '/home/riceUsers/fzr/new_pipline_test/result/osa_msu7_cdna.fa'
-#  outputfile = '/home/riceUsers/fzr/deg_out'
-#########################################################################################################
 print('loading miRNA seq data ... ')
 miRNA_dic = {}
 with open(inp, 'r') as fn:
@@ -199,7 +192,6 @@ with open(psRNAfile, 'r') as fn:
 
 
 print('loading degra data and start analysis ... ')
-# 保存在deg_target 中的
 int_ = {}
 annotation = {}
 with open(mapfile, 'r') as fn:
@@ -438,22 +430,3 @@ if plot_function == 'y':
                             else:
                                 plt.savefig ('/'.join(outfoldername.split('/')[:-1])+'/'+outfolder_sufix + '_' + vertified_sRNA+'-'+gene+'.png')
                             plt.close()
-
-
-
-# --------------------------------------------------------------> shift=-1 <---------------------------------------------------------------- #
-# deg_reads
-# TACGCGATATA
-#           ATTTGAGAGTACGCGATATAT
-#           sRNA_reads
-# ==============================================================> shift=1 <================================================================ #
-# deg_reads
-# TACGCGATATA
-#         ATATTTGAGAGTACGCGATATAT
-#         sRNA_reads
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> shift=0 <~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-# deg_reads
-# TACGCGATATA
-#          TATTTGAGAGTACGCGATATAT
-#          sRNA_reads
-# sRNA_loc -10 + 1 - shift = deg_loc

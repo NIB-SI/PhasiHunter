@@ -115,8 +115,6 @@ def main():
             [5]: extract feature
             [6]: unitas output format, location:XR_004857687.1\\tstart:2096\\tend:2244 to XR_004857687\\t2096\\t2244
             [7]: XR_002261863.2\\t(1929:2055) to XR_002261863.2\\t1929\\t2055
-            [8]: 添加chr\\tstart\\tend 在每一行的前面，1功能的增强版本
-            [9]: NC_050096.1     34607   35318   exon    XM_020544715.3-1 **TO** XM_020544715.3  1       711; 此功能被排除在pipline了
             [10]: XM_008683071.3  (1422:1508)     (1332:1521) **TO** XM_008683071.3  1422    1508
             [11]: [transcript_id=XM_020544715.3]\\t[location=join(34607..35318,36037..36174,36259..36504,36600..36713,36822..37004,37416..37633,38021..39618,39701..40208)]\\t[gbkey=mRNA] to XM_020544715.3\\t1\\t711
             [12]: filter bed line with start > end
@@ -263,7 +261,7 @@ def generatingExonRegion(fo):
             rna = j[0]
         except IndexError:
             rna = j
-        if rna != former_rna: # 进入第一个RNA
+        if rna != former_rna:
             o_start = start
             print(f'{rna}\t1\t{end - start}')
             former_rna = rna
