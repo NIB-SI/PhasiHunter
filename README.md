@@ -1,5 +1,6 @@
 # phasihunter
 Welcome to phasihunter 😉
+
 A multithreaded program for mining phasiRNA regulation pathways based on multiple reference sequences.
 
 ![image.png|425](https://sandbox-1314381151.cos.ap-nanjing.myqcloud.com/pic/202307312031023.png)
@@ -70,4 +71,5 @@ phasiHunter deg -i <degradome_cdna.map> -q <SRR5049781_phasiRNA.fa> -j <SRR50497
 
 # Copyright
 Copyright © Crop Bioinformatics Group (CBI), College of Agricultural, Nanjing Agricultural University.
+
 Free for academic use. For commercial use, please contact us (huangji@njau.edu.cn)
