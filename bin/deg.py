@@ -113,8 +113,12 @@ print('loading Prediction Target Gene fasta data ... ')
 targetfaDic = {}
 with open(targetfa, 'r') as fn:
     for i in SeqIO.parse(fn, 'fasta'):
-        if i.name not in targetfaDic:
-            targetfaDic[i.name] = len(i.seq)
+        try:
+            j = i.name.split('__')[1]
+        except IndexError:
+            j = i.name
+        if j not in targetfaDic:
+            targetfaDic[j] = len(i.seq)
 
 # with open(targetfa, 'r') as fn:
 #     last_line = "CBI"

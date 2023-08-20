@@ -15,7 +15,7 @@ echo "Usage:
 subcommand:
     preprocess:     generating map file for phasiRNA cluster prediction
     phase:          predicting phasiRNA cluster based on multiple reference sequences
-    intergration:   intergrating phase module output
+    integration:    integrating phase module output
     visulization:   for phasiRNA cluster visulization
     target:         for sRNA target gene prediction
     initiator:      for phasiRNA initiator prediction

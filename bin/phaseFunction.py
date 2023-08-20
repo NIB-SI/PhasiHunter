@@ -718,7 +718,7 @@ def ParseBins(dic: dict, bins: dict, phase_length):
     # %bin_pos = {bin: pos,pos,.., ..}
     # %bin_query_21nt = {bin:{pos: sRNA}, ..}
     # %bin_pos_21nt = {bin: pos, ..}
-    # %hypergeometric = {bin: {length: [pos1, pos1, pos2, ...], lenght: [pos1, pos2, ...]}, ...}, 最多只能存两个相同的元素， 一个是正链的， 另一个是负链的
+    # %hypergeometric = {bin: {length: [pos1, pos1, pos2, ...], lenght: [pos1, pos2, ...]}, ...}
     # %bin_strand = {'+': [pos, pos, pos, ...], '-': [pos, pos, pos], ...}
     # %bin_strand_21nt = {'+': [pos, pos, pos, ...], '-': [pos, pos, pos], ...}
     # %bin21out = {pos + "\t" + strand: [sRNAid: seq]}
