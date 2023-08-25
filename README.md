@@ -73,3 +73,4 @@ phasiHunter deg -i <degradome_cdna.map> -q <SRR5049781_phasiRNA.fa> -j <SRR50497
 Copyright © Crop Bioinformatics Group (CBI), College of Agricultural, Nanjing Agricultural University.
 
 Free for academic use. For commercial use, please contact us (huangji@njau.edu.cn)
+
