@@ -3,7 +3,7 @@
 tmp=`which phasiHunter`
 wd=${tmp%/*}
 
-# ----------> parament capture start <------------
+# ----------> parameter capture start <------------
 if [ "$#" -eq 0 ] ; then echo -e "type ${0##*/} -h for help message"
     exit 1
 fi
@@ -36,22 +36,22 @@ if [ "$#" -gt 0 ]
         esac
     done
 fi
-# ----------> parament capture end<------------
+# ----------> parameter capture end<------------
 
 tmp=(`echo $@`)
-parament=${tmp[@]:1:$#}
+parameter=${tmp[@]:1:$#}
 
-[ $1 != 'preprocess' ] || bash $wd/bin/preprocess.sh $parament
-[ $1 != 'phase' ] || python3 $wd/bin/phase.py $parament
-[ $1 != 'integration' ] || python3 $wd/bin/integration.py $parament
-[ $1 != 'visulization' ] || python3 $wd/bin/visualization.py $parament
-[ $1 != 'initiator' ] || python3 $wd/bin/initiator.py $parament
+[ $1 != 'preprocess' ] || bash $wd/bin/preprocess.sh $parameter
+[ $1 != 'phase' ] || python3 $wd/bin/phase.py $parameter
+[ $1 != 'integration' ] || python3 $wd/bin/integration.py $parameter
+[ $1 != 'visulization' ] || python3 $wd/bin/visualization.py $parameter
+[ $1 != 'initiator' ] || python3 $wd/bin/initiator.py $parameter
 if [ $1 = 'target' ]; then
-    if [[ $parament == *-t* ]]; then
-        perl $wd/bin/TarHunterL_Modified.pl $parament
+    if [[ $parameter == *-t* ]]; then
+        perl $wd/bin/TarHunterL_Modified.pl $parameter
     else
-        perl $wd/bin/TarHunterL_Modified.pl $parament "-t"
+        perl $wd/bin/TarHunterL_Modified.pl $parameter "-t"
     fi
 fi
-[ $1 != 'deg' ] || python3 $wd/bin/deg.py $parament
-[ $1 != 'read' ] || python3 $wd/bin/readstdin.py $parament
+[ $1 != 'deg' ] || python3 $wd/bin/deg.py $parameter
+[ $1 != 'read' ] || python3 $wd/bin/readstdin.py $parameter

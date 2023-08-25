@@ -1718,7 +1718,7 @@ def Hypergeometric(hgdna_allsiRNA, allsiRNA, phasiRNA, setting1, setting2):
             hout[i]['phasiRNA_strand'] = tmp[3]
     return hout
 
-def ParallelSecondScaning(parament):
+def ParallelSecondScaning(parameter):
     """second scaning
 
     Parameters
@@ -1733,8 +1733,8 @@ def ParallelSecondScaning(parament):
     tuple
         (out_phasiRNA, out_allsiRNA, out_phasiRNA_cluster, out_allsiRNA_cluster)
     """
-    final_allsiRNA = parament[0]
-    setting = parament[1:]
+    final_allsiRNA = parameter[0]
+    setting = parameter[1:]
     final_gene = {}
     duplication_phasiRNA = nestedDic()
     duplication_allsiRNA = nestedDic()

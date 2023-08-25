@@ -33,7 +33,7 @@ phasihunter is a CLI program runing on linux platform. The correction runing of 
 Now type `phasihunter -h` to check phasihunter whether installation correct.
 
 # Use case
-Parament in < > means necessary; parament in [ ] means optional
+Parameter in < > means necessary; parameter in [ ] means optional
 
 1. Data pre-process
 ```bash

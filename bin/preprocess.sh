@@ -8,7 +8,7 @@ ma=25
 cpm=1
 norm=1000000
 interTest='n'
-# ----------> parament capture start <------------
+# ----------> parameter capture start <------------
 if [ "$#" -eq 0 ] ; then echo -e "type ${0##*/} -h for help message"
     exit 1
 fi
@@ -107,7 +107,7 @@ exit 1
         esac
     done
 fi
-# ----------> parament capture end<------------
+# ----------> parameter capture end<------------
 suffix=${inp##*\.}
 tmp=${inp##*/}
 id=${tmp%%.*}
