@@ -143,11 +143,11 @@ else
             echo "the adaptor of ${inp##*/} is $adaptor"
             trim_galore --dont_gzip --stringency 3 --length $mi --max_length $ma -a $adaptor $inp -j $cores
             seqkit fq2fa ${id}_trimmed.fq > ${id}_trimmed.fa
-            [ $interTest != 'y' ] || exit
             rm ${id}_trimmed.fq
             python3 $wd/format.py -i ${id}_trimmed.fa -o ${id}_trimmed_format.fa -it f -ot fn -of $id -n $norm
             rm ${id}_trimmed.fa
             python3 $wd/filter.py -i ${id}_trimmed_format.fa -o ${id}_trimmed_format_filter.fa -min $mi -max $ma -count $cpm
+            [ $interTest != 'y' ] || exit
             rm ${id}_trimmed_format.fa
             if [ $idx -eq 0 ]; then
                 tmp=${ref##*/}
