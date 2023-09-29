@@ -75,133 +75,133 @@ phasiHunter preprocess -m <r> -i <SRR5049781.fastq.gz> -r <oryza_sativa_gdna.fa>
 
 - preprocess module usage
 
-    ```txt
-    Help messeage:
-        options: 
-            # necessary options:
-            -m:  string --  mode: r | c | m;
-                            raw(mode): trim adaptor --> normalization --> length and abundance filter --> mapping
-                            clean(mode): normalization --> length and abundance filter --> mapping
-                            mapping(mode): mapping
-            -i:  file   --  for r mode: fastq file or fastq.gz file
-                            for c mode: fasta file or fasta.gz file
-                            for m mode: length and abundance filter fasta file
-            -r:  file   --  reference sequence fasta file
-            -in: string --  index prefix, -r option will be ignored when -in enable
-            -o:  outfile --  outfile name
+```txt
+Help messeage:
+  options: 
+    # necessary options:
+    -m:  string --  mode: r | c | m;
+                    raw(mode): trim adaptor --> normalization --> length and abundance filter --> mapping
+                    clean(mode): normalization --> length and abundance filter --> mapping
+                    mapping(mode): mapping
+    -i:  file   --  for r mode: fastq file or fastq.gz file
+                    for c mode: fasta file or fasta.gz file
+                    for m mode: length and abundance filter fasta file
+    -r:  file   --  reference sequence fasta file
+    -in: string --  index prefix, -r option will be ignored when -in enable
+    -o:  outfile --  outfile name
 
-            # options with default value
-            -j:  int    --  adaptor trim parallel cores; <8 is recommend, only need in r mode, default=1
-            -bj: int    --  bowtie parallel cores; defalut=1
-            -mh: int    --  max hits when mapping to ref sequence, default=10
-            -mi: int    --  minimal sRNA reads length cutoff, default=19
-            -ma: int    --  maxmial sRNA reads length cutoff, default=25
-            -e:  float  --  sRNA reads cpm cutoff, default=1 
-            -n:  int    --  normalization base, default=1000000
+    # options with default value
+    -j:  int    --  adaptor trim parallel cores; <8 is recommend, only need in r mode, default=1
+    -bj: int    --  bowtie parallel cores; defalut=1
+    -mh: int    --  max hits when mapping to ref sequence, default=10
+    -mi: int    --  minimal sRNA reads length cutoff, default=19
+    -ma: int    --  maxmial sRNA reads length cutoff, default=25
+    -e:  float  --  sRNA reads cpm cutoff, default=1 
+    -n:  int    --  normalization base, default=1000000
 
 
-            # other
-            -v:         --  print version information
-            -h:         --  print help information
-    ```
+    # other
+    -v:         --  print version information
+    -h:         --  print help information
+```
 
 2. PhasiRNA and PHAS loci prediction
 ```bash 
 phasiHunter phase -cm <SRR5049781_cdna.map> -c <oryza_sativa_cdna.fa> -gm <SRR5049781_gdna.map> -g <oryza_sativa_gdna.fa> -fa <SRR7851621_trimmed_format_filter.fa> -a [SRR5049781_allsiRNA.txt] -o [SRR5049781_phasiRNA.txt] -pl [21] -j [10] -pv [0.0001] -ps [15] -pr [0.4] 
 ```
 - phase module usage
-    ```txt
-    phase usage:
-        option:
-            -cm: file  --  map file based on reference transcriptome sequence
-            -c:  file  --  reference transcritome sequence, fasta file
-            -gm: file  --  map file based on reference genome sequence
-            -g:  file  --  reference genome sequence, fasta file
-            -fm: file  --  map file based on full length transcriptome sequence
-            -f:  file  --  full length transcriptome sequence, fasta file
-            -fa: file  --  sRNA file
-            -a:  out   --  allsiRNA cluster output file, default name is phase_a.txt
-            -o:  out   --  phasiRNA cluster output file, default name is phase_o.txt
-            -me: str   --  phasiRNA prediction method, h(hypergeometric test) | p(phase score) | b (both), default=b
-            -il: int   --  phasiRNA cluster island, default=5
-            -pl: int   --  phase length, 21 | 24, default=21
-            -pn: int   --  phase number, default=4
-            -mh: int   --  max hits when mapping to ref sequence, default=10
-            -j:  int   --  parallel number, default=1
-            -pv: float --  pvalue cutoff, default=0.001, only function with h/b method applied
-            -ps: float --  phase score cutoff, default=15, only function with p/b method applied
-            -pr: float --  phase ratio cutoff, default=0.4, only function with p/b method applied
-            -cl: str   --  delete .phasiHuter_bowtieIndex, y|n, default=y
-            -v:        --  print version information
-            -h:        --  print help information
-    ```
+```txt
+phase usage:
+  option:
+    -cm: file  --  map file based on reference transcriptome sequence
+    -c:  file  --  reference transcritome sequence, fasta file
+    -gm: file  --  map file based on reference genome sequence
+    -g:  file  --  reference genome sequence, fasta file
+    -fm: file  --  map file based on full length transcriptome sequence
+    -f:  file  --  full length transcriptome sequence, fasta file
+    -fa: file  --  sRNA file
+    -a:  out   --  allsiRNA cluster output file, default name is phase_a.txt
+    -o:  out   --  phasiRNA cluster output file, default name is phase_o.txt
+    -me: str   --  phasiRNA prediction method, h(hypergeometric test) | p(phase score) | b (both), default=b
+    -il: int   --  phasiRNA cluster island, default=5
+    -pl: int   --  phase length, 21 | 24, default=21
+    -pn: int   --  phase number, default=4
+    -mh: int   --  max hits when mapping to ref sequence, default=10
+    -j:  int   --  parallel number, default=1
+    -pv: float --  pvalue cutoff, default=0.001, only function with h/b method applied
+    -ps: float --  phase score cutoff, default=15, only function with p/b method applied
+    -pr: float --  phase ratio cutoff, default=0.4, only function with p/b method applied
+    -cl: str   --  delete .phasiHuter_bowtieIndex, y|n, default=y
+    -v:        --  print version information
+    -h:        --  print help information
+```
 
 3. PhasiRNA and PHAS loci result integration
 ```bash
 phasiHunter integration -io <SRR5049781_phasiRNA.txt> -ia <SRR5049781_allsiRNA.txt> -an <oryza_sativa_gdna.gff3> -o [SRR5049781_phasiRNA_dup.txt] -a [SRR5049781_allsiRNA_dup.txt] -s [SRR5049781_summary.txt] -po [SRR5049781_phas.txt] -g <y>
 ```
 - integration module usage
-    ```txt
-    integration usage:
-        option:
-            # necessary options:
-            -io: file  --  phase module -o output file
-            -ia: file  --  phase module -a output file
-            -an: file  --  reference genome gff3 file
-            -g:  str  --  y | n, whether exist gdna based PHAS loci
+```txt
+integration usage:
+  option:
+    # necessary options:
+    -io: file  --  phase module -o output file
+    -ia: file  --  phase module -a output file
+    -an: file  --  reference genome gff3 file
+    -g:  str  --  y | n, whether exist gdna based PHAS loci
 
-            # options with default value
-            -o:  out  --  integration phasiRNA cluster, default name is integration_o.txt
-            -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
-            -s:  out  --  integration summary, default name is integration_s.txt
-            -po: out  --  PHAS loci information, default name is integration_p.txt
-            -j:  int   --  parallel number, default=1
-            -pn: int   --  phase number, default=4
-            -pl: int   --  phase length, 21 | 24, default=21
-            -pv: float --  pvalue cutoff, default=0.001
-            -il: int   --  phasiRNA cluster island, default=5
-            -dp: str   -- y | n, discard only P method result, default=y
+    # options with default value
+    -o:  out  --  integration phasiRNA cluster, default name is integration_o.txt
+    -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
+    -s:  out  --  integration summary, default name is integration_s.txt
+    -po: out  --  PHAS loci information, default name is integration_p.txt
+    -j:  int   --  parallel number, default=1
+    -pn: int   --  phase number, default=4
+    -pl: int   --  phase length, 21 | 24, default=21
+    -pv: float --  pvalue cutoff, default=0.001
+    -il: int   --  phasiRNA cluster island, default=5
+    -dp: str   -- y | n, discard only P method result, default=y
 
-            # optional options
-            -fn: file  --  full length transcript annotation file
+    # optional options
+    -fn: file  --  full length transcript annotation file
 
-            # other
-            -v:       --  print version information
-            -h:       --  print help information
-    ```
+    # other
+    -v:       --  print version information
+    -h:       --  print help information
+```
 
 4. Print phasiRNA_cluster plot, phasiRNA.fa, PHAS.fa
 ```bash
 phasiHunter visulization -io <SRR5049781_phasiRNA_dup.txt> -ia <SRR5049781_allsiRNA_dup.txt> -ip <SRR5049781_phas.txt> -a [SRR5049781_alignment.txt] -o [SRR5049781.phasiRNA.fa] -p [SRR5049781.PHAS.fa] -c [oryza_sativa_cdna.fa] -g [oryza_sativa_gdna.fa] -pc [y] -pg [y]
 ```
 - visulization module usage
-    ```txt
-    visulization usage:
-        option:
-            # necessary options:
-            -io: file  --  integration -io outputfile
-            -ia: file  --  integration -ia outputfile
-            -ip: file  --  integration -po outputfile
-            -a:  out   --  alignment file, default name is alignment.txt
-            -o:  out   --  phasiRNA fasta file, default name is phasiRNA.fa
-            -p:  out   --  PHAS Gene fasta file; Format: >geneid/chr\tphasiRNA_cluster_region(start end)\tseq_region(start end), default name is PHAS.fa
+```txt
+visulization usage:
+  option:
+    # necessary options:
+    -io: file  --  integration -io outputfile
+    -ia: file  --  integration -ia outputfile
+    -ip: file  --  integration -po outputfile
+    -a:  out   --  alignment file, default name is alignment.txt
+    -o:  out   --  phasiRNA fasta file, default name is phasiRNA.fa
+    -p:  out   --  PHAS Gene fasta file; Format: >geneid/chr\tphasiRNA_cluster_region(start end)\tseq_region(start end), default name is PHAS.fa
 
-            # options with default value
-            -pl: int   --  phase length, 21 | 24, default=21
-            -m:  float  --  the number for reducing the size of Y-axis. default=10
+    # options with default value
+    -pl: int   --  phase length, 21 | 24, default=21
+    -m:  float  --  the number for reducing the size of Y-axis. default=10
 
-            # optional options
-            -c:  file  --  reference transcritome sequence, fasta file, enable cdna based phasiRNA.fa, PHAS.fa, Alignmen, Plot output
-            -g:  file  --  reference genome sequence, fasta file, enable gdna based phasiRNA.fa, PHAS.fa, Alignmen, Plot output
-            -f:  file  --  full length transcriptome sequence, fasta file, enable flnc based phasiRNA.fa, PHAS.fa, Alignmen, Plot output
-            -pc: str  --  plot cdna based phasiRNA cluster, y | n, defaut=y
-            -pg: str  --  plot gdna based phasiRNA cluster, y | n, defaut=y
-            -pf: str  --  plot flnc based phasiRNA cluster, y | n, defaut=y
+    # optional options
+    -c:  file  --  reference transcritome sequence, fasta file, enable cdna based phasiRNA.fa, PHAS.fa, Alignmen, Plot output
+    -g:  file  --  reference genome sequence, fasta file, enable gdna based phasiRNA.fa, PHAS.fa, Alignmen, Plot output
+    -f:  file  --  full length transcriptome sequence, fasta file, enable flnc based phasiRNA.fa, PHAS.fa, Alignmen, Plot output
+    -pc: str  --  plot cdna based phasiRNA cluster, y | n, defaut=y
+    -pg: str  --  plot gdna based phasiRNA cluster, y | n, defaut=y
+    -pf: str  --  plot flnc based phasiRNA cluster, y | n, defaut=y
 
-            # other
-            -v:        --  print version information
-            -h:        --  print help information
-    ```
+    # other
+    -v:        --  print version information
+    -h:        --  print help information
+```
 
 5. Initiator prediction and verification
 ```bash 
@@ -213,72 +213,72 @@ phasiHunter deg -i <degradome_PHAS.map> -q <osa_miRNA.fa> -j <SRR5049781_initiat
 ```
 
 - target module usage
-    ```txt
-    Usage:
-        perl /home/user/volumes/PhasiHunter/bin/TarHunterL_Modified.pl -q <mir_file> -b <targ_file> -o <out_file> [Options]
+```txt
+Usage:
+    perl /home/user/volumes/PhasiHunter/bin/TarHunterL_Modified.pl -q <mir_file> -b <targ_file> -o <out_file> [Options]
 
-    Required arguments:
-        -q (--qmir):         query miRNA file
-        -b (--targ):         target file
-        -o (--output):       output file
+Required arguments:
+    -q (--qmir):         query miRNA file
+    -b (--targ):         target file
+    -o (--output):       output file
 
-    Options:
+Options:
 
-        -M (--total_misp):   max. total mispairs               [Default: off]
-        -m (--seed_misp):    max. seed mispairs                [Default: off]
-        -f (--score):        score cutoff                      [Default:  4 ]
+    -M (--total_misp):   max. total mispairs               [Default: off]
+    -m (--seed_misp):    max. seed mispairs                [Default: off]
+    -f (--score):        score cutoff                      [Default:  4 ]
 
-        -I (--mimics):       eTM search                        [Default: off]
-        -i (--mimics_str):   eTM stringency
-                            (0: strict, 1: relaxed)           [Default:  0 ]
+    -I (--mimics):       eTM search                        [Default: off]
+    -i (--mimics_str):   eTM stringency
+                        (0: strict, 1: relaxed)           [Default:  0 ]
 
-        -T (--threads):      FASTA threads                     [Default:  1 ]
-        -t (--tab):          tabular format output             [Default: off]
-        -h (--help):         help information
+    -T (--threads):      FASTA threads                     [Default:  1 ]
+    -t (--tab):          tabular format output             [Default: off]
+    -h (--help):         help information
 
-    Dependencies:
-        fasta36    
-    ```
+Dependencies:
+    fasta36    
+```
 
 - initiator module usage
-    ```txt
-    initiator option:
-        -i  [str]integration -o output
-        -j  [str]the target predicted by psRNAtarget server or target module
-        -ip [str]integration -po output
-        -pd [int]the microRNA distance away to phase border, default=105(21) or 120 (24), optional
-        -pl [int]21 or 24, the phase length of 21 or 24, default=21
-        -ps [int]0 or 1, the position of cleavage at 10(0) or 9-11 (1), default=1
-        -o  [str]outputfilename.
-        -h  print the version and details of the usage
-    ```
+```txt
+initiator option:
+  -i  [str]integration -o output
+  -j  [str]the target predicted by psRNAtarget server or target module
+  -ip [str]integration -po output
+  -pd [int]the microRNA distance away to phase border, default=105(21) or 120 (24), optional
+  -pl [int]21 or 24, the phase length of 21 or 24, default=21
+  -ps [int]0 or 1, the position of cleavage at 10(0) or 9-11 (1), default=1
+  -o  [str]outputfilename.
+  -h  print the version and details of the usage
+```
 
 - deg module usage
-    ```txt
-    // function: vertified the sRNA - Target interaction with degradome data
+```txt
+// function: vertified the sRNA - Target interaction with degradome data
 
-        options:
-        -i: <inputfilename>     --    mapping file for degradome data mapping transcripts, by bowtie
-        -q: <sRNA fasta>        --    small RNA sequences used for target prediction, fasta
-        -j: <inputfilename>     --    from psRNATarget batch download file or initiator output
-        -t: <inputfilename>     --    transcripts file, fasta
-        -o: <outputfilename>    --    matched map file with only matched records
-        -s: <shift_number>      --    if shifts=0 then cleaved exactly at pos.10, default=1
-        -m: <minum deg_num>     --    minum number of degradome reads, int, default=0
-        -p: <T-plot function>   --    enable the plot function, y | n, default='n' 
-        -in: <bool>             --    y | n, use initiator output information
-        -pl [int]               --    1,plot only category 1; 2, plot categories 1 and 2, default=1
-        -pf [str]               --    output folder name, for exporting t-plot images and outputfile
-        --lib [str]             --    library name
-        -less                   --    only output cat_1 and cat_2 information
+  options:
+  -i: <inputfilename>     --    mapping file for degradome data mapping transcripts, by bowtie
+  -q: <sRNA fasta>        --    small RNA sequences used for target prediction, fasta
+  -j: <inputfilename>     --    from psRNATarget batch download file or initiator output
+  -t: <inputfilename>     --    transcripts file, fasta
+  -o: <outputfilename>    --    matched map file with only matched records
+  -s: <shift_number>      --    if shifts=0 then cleaved exactly at pos.10, default=1
+  -m: <minum deg_num>     --    minum number of degradome reads, int, default=0
+  -p: <T-plot function>   --    enable the plot function, y | n, default='n' 
+  -in: <bool>             --    y | n, use initiator output information
+  -pl [int]               --    1,plot only category 1; 2, plot categories 1 and 2, default=1
+  -pf [str]               --    output folder name, for exporting t-plot images and outputfile
+  --lib [str]             --    library name
+  -less                   --    only output cat_1 and cat_2 information
 
-        ***********************
-        //About the categories:
-        Cat #1, degradome read at the cleavage site is most abundant.
-        Cat #2, the read is less than the most abudant one, but higher than the median.
-        Cat #3, the read is less than the median, but high than 1
-        Cat #4, the read is identical or less than 1 (if degradome data is normalized)
-    ```
+  ***********************
+  //About the categories:
+  Cat #1, degradome read at the cleavage site is most abundant.
+  Cat #2, the read is less than the most abudant one, but higher than the median.
+  Cat #3, the read is less than the median, but high than 1
+  Cat #4, the read is identical or less than 1 (if degradome data is normalized)
+```
 
 6. PhasiRNA target prediction and verification
 ```bash
