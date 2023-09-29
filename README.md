@@ -17,7 +17,7 @@ Welcome to phasihunter 😉
 A multithreaded program for mining phasiRNA regulation pathways based on multiple reference sequences.
 
 ## PhasiHunter workflow
-![Alt text](image/image-1.png)
+<img src="image/image-1.png" alt="Image" width="600">
 
 ## Dependencies
 phasihunter is a CLI program runing on linux platform. The correction runing of phasihunter depends on some existing softwares.
