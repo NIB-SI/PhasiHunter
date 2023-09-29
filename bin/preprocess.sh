@@ -8,6 +8,7 @@ ma=25
 cpm=1
 norm=1000000
 interTest='n'
+interTest0='n'
 # ----------> parameter capture start <------------
 if [ "$#" -eq 0 ] ; then echo -e "type ${0##*/} -h for help message"
     exit 1
@@ -100,6 +101,10 @@ exit 1
                 ((i+=1))
                 interTest=${!i}
                 ;;
+            -ia)
+                ((i+=1))
+                interTest0=${!i}
+                ;;
             *)
                 echo "\"${!i}\" is not a valid parameter in ${0##*/}. See -h"
                 exit 1
@@ -115,6 +120,7 @@ if [ $mode = 'm' ]; then
     if [ $idx -eq 0 ]; then
         tmp=${ref##*/}
         refid=${tmp%.*}
+        [ -e index ] || mkdir index
         bindex=index/${refid%.*}_index
         if [ -e ${bindex}.rev.1.ebwt ]; then
             echo "$ref index exsit, pass build index"
@@ -122,16 +128,16 @@ if [ $mode = 'm' ]; then
             bowtie-build $ref $bindex
         fi
         if [ $outfile_name!='' ]; then
-            bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex $inp ${outfile_name}
+            bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex $inp ${outfile_name}
         else
-            bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex $inp ${id}.map
+            bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex $inp ${id}.map
         fi
     else
         bindex=$index
         if [ $outfile_name!='' ]; then
-            bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex $inp ${outfile_name}
+            bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex $inp ${outfile_name}
         else
-            bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex $inp ${id}.map
+            bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex $inp ${id}.map
         fi
     fi
 else
@@ -144,6 +150,7 @@ else
             trim_galore --dont_gzip --stringency 3 --length $mi --max_length $ma -a $adaptor $inp -j $cores
             seqkit fq2fa ${id}_trimmed.fq > ${id}_trimmed.fa
             rm ${id}_trimmed.fq
+            [ $interTest0 != 'y' ] || exit
             python3 $wd/format.py -i ${id}_trimmed.fa -o ${id}_trimmed_format.fa -it f -ot fn -of $id -n $norm
             rm ${id}_trimmed.fa
             python3 $wd/filter.py -i ${id}_trimmed_format.fa -o ${id}_trimmed_format_filter.fa -min $mi -max $ma -count $cpm
@@ -152,6 +159,7 @@ else
             if [ $idx -eq 0 ]; then
                 tmp=${ref##*/}
                 refid=${tmp%.*}
+                [ -e index ] || mkdir index
                 bindex=index/${refid%.*}_index
                 if [ -e ${bindex}.rev.1.ebwt ]; then
                     echo "$ref index exsit, pass build index"
@@ -159,16 +167,16 @@ else
                     bowtie-build $ref $bindex
                 fi
                 if [ $outfile_name!='' ]; then
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
                 else
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
                 fi
             else
                 bindex=$index
                 if [ $outfile_name!='' ]; then
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
                 else
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
                 fi
             fi
         elif [ $mode = 'c' ]; then
@@ -182,6 +190,7 @@ else
             if [ $idx -eq 0 ]; then
                 tmp=${ref##*/}
                 refid=${tmp%.*}
+                [ -e index ] || mkdir index
                 bindex=index/${refid%.*}_index
                 if [ -e ${bindex}.rev.1.ebwt ]; then
                     echo "$ref index exsit, pass build index"
@@ -189,16 +198,16 @@ else
                     bowtie-build $ref $bindex
                 fi
                 if [ $outfile_name!='' ]; then
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
                 else
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
                 fi
             else
                 bindex=$index
                 if [ $outfile_name!='' ]; then
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
                 else
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
                 fi
             fi
         else
@@ -216,6 +225,7 @@ else
             if [ $idx -eq 0 ]; then
                 tmp=${ref##*/}
                 refid=${tmp%.*}
+                [ -e index ] || mkdir index
                 bindex=index/${refid%.*}_index
                 if [ -e ${bindex}.rev.1.ebwt ]; then
                     echo "$ref index exsit, pass build index"
@@ -223,16 +233,16 @@ else
                     bowtie-build $ref $bindex
                 fi
                 if [ $outfile_name!='' ]; then
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
                 else
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
                 fi
             else
                 bindex=$index
                 if [ $outfile_name!='' ]; then
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${outfile_name}
                 else
-                    bowtie -t -v 0 -p $bcores -f -m $mh -a -x $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
+                    bowtie -t -v 0 -p $bcores -f -m $mh -a $bindex ${id}_trimmed_format_filter.fa ${id}_trimmed_format_filter.map
                 fi
             fi
         else

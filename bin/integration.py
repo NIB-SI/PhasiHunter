@@ -19,7 +19,7 @@ def main1():
     allfile = 'integration_a.txt'
     intergrationfile = 'integration_s.txt'
     help = '''
-    phase usage:
+    integration usage:
         option:
             # necessary options:
             -io: file  --  phase module -o output file
@@ -51,37 +51,85 @@ def main1():
 
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == '-io':
-            phasiRNAfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phasiRNAfile = sys.argv[i+1]
         elif sys.argv[i] == '-ia':
-            allsiRNAfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                allsiRNAfile = sys.argv[i+1]
         elif sys.argv[i] == '-fn':
-            flnc_anno = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                flnc_anno = sys.argv[i+1]
         elif sys.argv[i] == '-il':
-            island_number = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                island_number = int(sys.argv[i+1])
         elif sys.argv[i] == '-an':
-            gff3 = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                gff3 = sys.argv[i+1]
         elif sys.argv[i] == '-g':
-            gdna_enable = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                gdna_enable = sys.argv[i+1]
         elif sys.argv[i] == '-o':
-            outfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                outfile = sys.argv[i+1]
         elif sys.argv[i] == '-j':
-            parallel_number = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                parallel_number = int(sys.argv[i+1])
         elif sys.argv[i] == '-po':
-            PHAS_Loci_out = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                PHAS_Loci_out = sys.argv[i+1]
         elif sys.argv[i] == '-dp':
-            passP = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                passP = sys.argv[i+1]
         elif sys.argv[i] == '-a':
-            allfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                allfile = sys.argv[i+1]
         elif sys.argv[i] == '-s':
-            intergrationfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                intergrationfile = sys.argv[i+1]
         elif sys.argv[i] == '-pn':
-            phase_number = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phase_number = int(sys.argv[i+1])
         elif sys.argv[i] == '-pl':
-            phase_length = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phase_length = int(sys.argv[i+1])
         elif sys.argv[i] == '-pv':
-            pvalue_cutoff = float(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                pvalue_cutoff = float(sys.argv[i+1])
         elif sys.argv[i] == '-mn':
-            min_read_num = float(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                min_read_num = float(sys.argv[i+1])
         elif sys.argv[i] == '-v':
             print(version)
             sys.exit()
@@ -207,6 +255,7 @@ def main1():
         catCombine(Non_intergenic, intergrationfile)
     Vprint('Intergration finished!', enable=True)
     fo_allsiRNA.close()
+    print(f'delete temporary folder {TMP_WD}/{tmp_folder}')
     os.system(f'rm -r {TMP_WD}/{tmp_folder}')
 
 if __name__ == "__main__":

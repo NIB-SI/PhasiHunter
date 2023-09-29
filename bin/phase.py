@@ -86,45 +86,105 @@ if __name__ == '__main__':
     '''
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == '-cm':
-            cdna_mapfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                cdna_mapfile = sys.argv[i+1]
         elif sys.argv[i] == '-il':
-            island_number = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                island_number = int(sys.argv[i+1])
         elif sys.argv[i] == '-pl':
-            phase_length = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phase_length = int(sys.argv[i+1])
         elif sys.argv[i] == '-pn':
-            phase_number = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phase_number = int(sys.argv[i+1])
         elif sys.argv[i] == '-me':
-            method = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                method = sys.argv[i+1]
         elif sys.argv[i] == '-ps':
-            phaseScore_cutoff = float(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phaseScore_cutoff = float(sys.argv[i+1])
         elif sys.argv[i] == '-pr':
-            phaseRatio_cutoff = float(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phaseRatio_cutoff = float(sys.argv[i+1])
         elif sys.argv[i] == '-mh':
-            max_hits = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                max_hits = int(sys.argv[i+1])
         elif sys.argv[i] == '-j':
-            parallel_number = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                parallel_number = int(sys.argv[i+1])
         elif sys.argv[i] == '-pv':
-            pvalue_cutoff = float(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                pvalue_cutoff = float(sys.argv[i+1])
         elif sys.argv[i] == '-mn':
-            min_read_num = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                min_read_num = int(sys.argv[i+1])
         elif sys.argv[i] == '-c':
-            cdna = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                cdna = sys.argv[i+1]
         elif sys.argv[i] == '-cl':
-            delete_phasiHuter_bowtieIndex = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                delete_phasiHuter_bowtieIndex = sys.argv[i+1]
         elif sys.argv[i] == '-g':
-            gdna = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                gdna = sys.argv[i+1]
         elif sys.argv[i] == '-f':
-            flnc = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                flnc = sys.argv[i+1]
         elif sys.argv[i] == '-gm':
-            gdna_mapfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                gdna_mapfile = sys.argv[i+1]
         elif sys.argv[i] == '-fm':
-            flnc_mapfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                flnc_mapfile = sys.argv[i+1]
         elif sys.argv[i] == '-fa':
-            fa = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                fa = sys.argv[i+1]
         elif sys.argv[i] == '-o':
-            tmpoutputfilename = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                tmpoutputfilename = sys.argv[i+1]
         elif sys.argv[i] == '-a':
-            tmpalloutputfilename = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                tmpalloutputfilename = sys.argv[i+1]
         elif sys.argv[i] == '-v':
             print(version)
             sys.exit()

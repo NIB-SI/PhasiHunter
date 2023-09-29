@@ -182,6 +182,21 @@ def ParseGff3(file: str):
                         dic[curGrandParentFeature][curParentFeature][curSonFeature][exonid] = 0
     return dic
 
+def ReformatsRNAId(map):
+    dic = nestedDic()
+    tmp_set = set()
+    for line in open(map, 'r'):
+        line1=line.split('\t')
+        sRNA_seq = line1[4]
+        tmp_set.add(sRNA_seq)
+    
+    count = 0
+    for i in tmp_set:
+        count += 1
+        dic[i] = 'seq_' + str(count)
+    
+    return dic
+
 def ParseHypergeometricMap(map, phase_length):
     """parse map file
 
@@ -196,12 +211,15 @@ def ParseHypergeometricMap(map, phase_length):
         key - geneid+'\t'+strand+'\t'+str(sRNA_pos)+\n
         value - str(sRNA_num)+'\t'+sRNA+'\t'+line1[4]+'\t'+str(sRNA_len)
     """
+    reformat_sRNAid = ReformatsRNAId(map)
     genewithhits = {}
     n = 0
     for line in open(map, 'r'):
         n+=1
         line1=line.split('\t')
         sRNA=line1[0]
+        #reformat sRNA id
+        sRNA_id = reformat_sRNAid[line1[4]]
         try:
             sRNA_num=float(sRNA.split('@')[1])
         except IndexError:
@@ -215,14 +233,15 @@ def ParseHypergeometricMap(map, phase_length):
             no=float((genewithhits[key]).split('\t')[0])
             no+=sRNA_num
             if sRNA_len == phase_length:
-                genewithhits[key]=str(no)+'\t'+sRNA+'\t'+line1[4]+'\t'+str(sRNA_len)
+                genewithhits[key]=str(no)+'\t'+sRNA_id+'\t'+line1[4]+'\t'+str(sRNA_len)
             elif genewithhits[key].split('\t')[3] == str(phase_length):
+                new_sRNAid = genewithhits[key].split('\t')[1]
                 seq = genewithhits[key].split('\t')[2]
-                genewithhits[key]=str(no)+'\t'+sRNA+'\t'+ seq +'\t'+str(phase_length)
+                genewithhits[key]=str(no)+'\t'+new_sRNAid+'\t'+ seq +'\t'+str(phase_length)
             else:
-                genewithhits[key]=str(no)+'\t'+sRNA+'\t'+line1[4]+'\t'+str(sRNA_len)
+                genewithhits[key]=str(no)+'\t'+sRNA_id+'\t'+line1[4]+'\t'+str(sRNA_len)
         else:
-            genewithhits[key]=str(sRNA_num)+'\t'+sRNA+'\t'+line1[4]+'\t'+str(sRNA_len)
+            genewithhits[key]=str(sRNA_num)+'\t'+sRNA_id+'\t'+line1[4]+'\t'+str(sRNA_len)
     return genewithhits
 
 def SplitCluster(final_cluster: list, island_number=5, phase_length=21):
@@ -968,6 +987,7 @@ def ParsePhaseScoreMap(file):
     -------
     dict
     """
+    reformat_sRNAid = ReformatsRNAId(file)
     dic = {}
     out_dic = {}
     with open(file, 'r') as fn:
@@ -981,6 +1001,8 @@ def ParsePhaseScoreMap(file):
             elif strand == '-':
                 pos = int(l[3]) + 2
             seq = l[4]
+            #reformat sRNA id
+            new_id = reformat_sRNAid[seq]
             try:
                 abun = float(id.split("_x")[-1])
             except ValueError:
@@ -989,10 +1011,10 @@ def ParsePhaseScoreMap(file):
             if gene not in dic:
                 dic[gene] = {}
             if key not in dic[gene]:
-                dic[gene][key] = str(abun) + "\t" + id
+                dic[gene][key] = str(abun) + "\t" + new_id
             else:
                 abun = float(dic[gene][key].split("\t")[0]) + abun
-                dic[gene][key] = str(abun) + "\t" + id
+                dic[gene][key] = str(abun) + "\t" + new_id
         for i in dic:
             if i not in out_dic:
                 out_dic[i] = {}

@@ -13,6 +13,7 @@ echo "Usage:
     phasiHunter subcommand options 
 
 subcommand:
+    run:            one command executing mode, config.yaml file required
     preprocess:     generating map file for phasiRNA cluster prediction
     phase:          predicting phasiRNA cluster based on multiple reference sequences
     integration:    integrating phase module output
@@ -55,3 +56,4 @@ if [ $1 = 'target' ]; then
 fi
 [ $1 != 'deg' ] || python3 $wd/bin/deg.py $parameter
 [ $1 != 'read' ] || python3 $wd/bin/readstdin.py $parameter
+[ $1 != 'run' ] || python3 $wd/bin/run.py $parameter

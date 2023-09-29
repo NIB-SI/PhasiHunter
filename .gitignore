@@ -4,3 +4,7 @@ bin/**/*.pyc
 **/*.txt
 **/*.DS_Store
 **/*.vscode/**
+PIPELINE.md
+README_old.md
+PIPELINE_old.md
+bin/config_osa.yaml

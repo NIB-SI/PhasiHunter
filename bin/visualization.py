@@ -445,15 +445,15 @@ def main():
     plot_g = 'y'
     plot_f = 'y'
     help = '''
-    phase usage:
+    visulization usage:
         option:
             # necessary options:
             -io: file  --  integration -io outputfile
             -ia: file  --  integration -ia outputfile
             -ip: file  --  integration -po outputfile
             -a:  out   --  alignment file, default name is alignment.txt
-            -o:  out   --  phasiRNA fasta file, default name is PHAS.fa
-            -p:  out   --  PHAS Gene fasta file; Format: >geneid/chr\\tphasiRNA_cluster_region(start end)\\tseq_region(start end), default name is phasiRNA.fa
+            -o:  out   --  phasiRNA fasta file, default name is phasiRNA.fa
+            -p:  out   --  PHAS Gene fasta file; Format: >geneid/chr\\tphasiRNA_cluster_region(start end)\\tseq_region(start end), default name is PHAS.fa
 
             # options with default value
             -pl: int   --  phase length, 21 | 24, default=21
@@ -478,33 +478,75 @@ def main():
 
     for i in range(1, len(sys.argv)):
         if sys.argv[i] == '-io':
-            phasiRNA_file = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phasiRNA_file = sys.argv[i+1]
         elif sys.argv[i] == '-ia':
-            allsiRNA_file = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                allsiRNA_file = sys.argv[i+1]
         elif sys.argv[i] == '-pl':
-            phase_length = int(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phase_length = int(sys.argv[i+1])
         elif sys.argv[i] == '-c':
-            cdna_file = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                cdna_file = sys.argv[i+1]
         elif sys.argv[i] == '-g':
-            gdna_file = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                gdna_file = sys.argv[i+1]
         elif sys.argv[i] == '-f':
-            flnc_file = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                flnc_file = sys.argv[i+1]
         elif sys.argv[i] == '-a':
-            outfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                outfile = sys.argv[i+1]
         elif sys.argv[i] == '-pc':
-            plot_c = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                plot_c = sys.argv[i+1]
         elif sys.argv[i] == '-pg':
-            plot_g = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                plot_g = sys.argv[i+1]
         elif sys.argv[i] == '-ip':
-            PHAS_Loci_file = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                PHAS_Loci_file = sys.argv[i+1]
         elif sys.argv[i] == '-pf':
-            plot_f = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                plot_f = sys.argv[i+1]
         elif sys.argv[i] == '-p':
-            PHAS_fa_outfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                PHAS_fa_outfile = sys.argv[i+1]
         elif sys.argv[i] == '-m':
-            max_abun = float(sys.argv[i+1])
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                max_abun = float(sys.argv[i+1])
         elif sys.argv[i] == '-o':
-            phasiRNA_outfile = sys.argv[i+1]
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                phasiRNA_outfile = sys.argv[i+1]
         elif sys.argv[i] == '-v':
             print(version)
             sys.exit()
