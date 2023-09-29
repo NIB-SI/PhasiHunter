@@ -23,7 +23,7 @@ start_time = time.time()
 shifts = [-1, 0, 1]
 min_num = 0
 plot_function = 'n'
-library = 'n'
+library = 'y'
 plot12=1
 less = 'n'
 outfoldername='./'
@@ -41,9 +41,9 @@ help = '''
     -m: <minum deg_num>     --    minum number of degradome reads, int, default=0
     -p: <T-plot function>   --    enable the plot function, y | n, default='n' 
     -in: <bool>             --    y | n, use initiator output information
-    -pl [int]               --    1,plot only category 1; 2, plot categories 1 and 2, default=1"
-    -pf [str]               --    output folder name, for exporting t-plot images, optional, useful when enable plot function"
-    --lib [str]             --    library, optional
+    -pl [int]               --    1,plot only category 1; 2, plot categories 1 and 2, default=1
+    -pf [str]               --    output folder name, for exporting t-plot images and outputfile
+    --lib [str]             --    library name
     -less                   --    only output cat_1 and cat_2 information
 
     ***********************
@@ -52,7 +52,6 @@ help = '''
     Cat #2, the read is less than the most abudant one, but higher than the median.
     Cat #3, the read is less than the median, but high than 1
     Cat #4, the read is identical or less than 1 (if degradome data is normalized)
-    "
 '''
 version = '''
     version 0.1
@@ -61,34 +60,76 @@ filter = ''
 # --------------------------------------------------------------> END <---------------------------------------------------------------- #
 for i in range(1, len(sys.argv)):
     if sys.argv[i] == '-i':
-        mapfile = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            mapfile = sys.argv[i+1]
     elif sys.argv[i] == '-q':
-        inp = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            inp = sys.argv[i+1]
     elif sys.argv[i] == '-j':
-        psRNAfile = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            psRNAfile = sys.argv[i+1]
     elif sys.argv[i] == '-t':
-        targetfa = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            targetfa = sys.argv[i+1]
     elif sys.argv[i] == '-s':
-        SHIFT = int(sys.argv[i+1])
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            SHIFT = int(sys.argv[i+1])
     elif sys.argv[i] == '--lib':
-        library = 'y'
-        libraryinfo = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            library = 'y'
+            libraryinfo = sys.argv[i+1]
     elif sys.argv[i]=='-pl':
-        plot12= int(sys.argv[i+1])
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            plot12= int(sys.argv[i+1])
     elif sys.argv[i]=='-pf':
-        outfoldername= sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            outfoldername= sys.argv[i+1]
+            if outfoldername!='':
+                if not os.path.exists(outfoldername):
+                    os.makedirs(outfoldername)
     elif sys.argv[i] == '-m':
-        min_num = float(sys.argv[i+1])
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            min_num = float(sys.argv[i+1])
     elif sys.argv[i] == '-in':
-        initiator = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            initiator = sys.argv[i+1]
     elif sys.argv[i] == '-o':
-        outputfile = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            outputfile = sys.argv[i+1]
     elif sys.argv[i] == '-less':
         less = 'y'
     elif sys.argv[i] == '-p':
-        plot_function = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            plot_function = sys.argv[i+1]
     elif sys.argv[i] == '-f':
-        filter = sys.argv[i+1]
+        if sys.argv[i+1] == 'None':
+            pass
+        else:
+            filter = sys.argv[i+1]
     elif sys.argv[i] == '-v':
         print(version)
         sys.exit()
@@ -148,6 +189,8 @@ with open(psRNAfile, 'r') as fn:
             if line1.startswith('#'):
                 continue
             if l[0] == 'miRNA_Acc.':
+                continue
+            if line1.startswith('miRNA_name'):
                 continue
             target_gene = l[1]
             miRNA = l[0]
@@ -304,11 +347,11 @@ for gene in list(int_):
 
 print(f'analysis finished, start writing data to {outputfile}')
 
-with open(outputfile, 'w') as fo:
+with open(outfoldername + '/' + outputfile, 'w') as fo:
     if library == 'y':
         string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation', 'Library']
-    elif library == 'n':
-        string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation']
+    # elif library == 'n':
+    #     string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation']
     fo.write("\t".join(string_list) + "\n")
     for gene in int_:
         gene_annotation = annotation[gene]
@@ -328,8 +371,8 @@ with open(outputfile, 'w') as fo:
                                 continue
                             if library == 'y':
                                 string_list = [category, vertified_sRNA, gene, str(sRNA_loc), str(deg_loc), str(deg_count), str(sRNA_seq), str(shift), gene_annotation, libraryinfo]
-                            elif library == 'n':
-                                string_list = [category, vertified_sRNA, gene, str(sRNA_loc), str(deg_loc), str(deg_count), str(sRNA_seq), str(shift), gene_annotation]
+                            # elif library == 'n':
+                            #     string_list = [category, vertified_sRNA, gene, str(sRNA_loc), str(deg_loc), str(deg_count), str(sRNA_seq), str(shift), gene_annotation]
                             fo.write("\t".join(string_list) + "\n")
 
 end_time = time.time()
@@ -384,11 +427,12 @@ if plot_function == 'y':
                                 plt.xlabel ("Nucleotide position (nt)")
                                 plt.ylabel ("Degradome Abundance (RP10M)")
                                 plt.ylim(ymin=0)
-                                outfolder_sufix = outfoldername.split('/')[1]
-                                if outfoldername == './':
-                                    plt.savefig (outfoldername+'/'+outfolder_sufix + vertified_sRNA+'-'+gene+'.png')
-                                else:
-                                    plt.savefig ('/'.join(outfoldername.split('/')[:-1])+'/'+outfolder_sufix + '_' + vertified_sRNA+'-'+gene+'.png')
+                                outfolder_full_path = os.path.abspath(outfoldername)
+                                # outfolder_sufix = outfoldername.split('/')[1]
+                                # if outfoldername == './':
+                                #     plt.savefig (outfoldername+'/'+outfolder_sufix + libraryinfo + '_' + vertified_sRNA+'-'+gene+'.png')
+                                # else:
+                                plt.savefig (outfolder_full_path +'/'+ libraryinfo + '_' + vertified_sRNA+'-'+gene+'.png')
                                 plt.close()
             except KeyError:
                 continue
@@ -428,9 +472,10 @@ if plot_function == 'y':
                             plt.xlabel ("Nucleotide position (nt)")
                             plt.ylabel ("Degradome Abundance (RP10M)")
                             plt.ylim(ymin=0)
-                            outfolder_sufix = outfoldername.split('/')[1]
-                            if outfoldername == './':
-                                plt.savefig (outfoldername+'/'+outfolder_sufix + vertified_sRNA+'-'+gene+'.png')
-                            else:
-                                plt.savefig ('/'.join(outfoldername.split('/')[:-1])+'/'+outfolder_sufix + '_' + vertified_sRNA+'-'+gene+'.png')
+                            outfolder_full_path = os.path.abspath(outfoldername)
+                            # outfolder_sufix = outfoldername.split('/')[1]
+                            # # if outfoldername == './':
+                            # #     plt.savefig (outfoldername+'/'+outfolder_sufix + libraryinfo + '_' + vertified_sRNA+'-'+gene+'.png')
+                            # else:
+                            plt.savefig (outfolder_full_path +'/'+ libraryinfo + '_' + vertified_sRNA+'-'+gene+'.png')
                             plt.close()
