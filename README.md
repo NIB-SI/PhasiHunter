@@ -67,7 +67,7 @@ echo "export PATH=\$PATH:$PWD >> ~/.bashrc"
 ## Demo data
 **Download link**
 
-`https://drive.google.com/drive/folders/1chBOhq4qTD-_Bvkbg31PRvAjKN7j1qOG?usp=drive_link`
+`https://1drv.ms/f/s!Aqk7tovcy4lXgfww2afdr61P31YQBA?e=c0UMbz`
 
 ## Executing PhasiHunter with step-by-step submodules. 
 Parameter in < > means necessary; parameter in [ ] means optional
