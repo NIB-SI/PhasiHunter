@@ -213,11 +213,8 @@ def PHASGene_seq(seq, region1):
             start = start - num
             break
     for num in [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 0]:
-        if end + num <= len(seq):
-            continue
-        else:
-            end = end + num
-            break
+        end = end + num 
+        break
     return [seq[start :end], region1, (start, end)]
     
 

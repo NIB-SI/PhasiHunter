@@ -349,9 +349,9 @@ print(f'analysis finished, start writing data to {outputfile}')
 
 with open(outfoldername + '/' + outputfile, 'w') as fo:
     if library == 'y':
-        string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation', 'Library']
+        string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation|Marker', 'Library']
     # elif library == 'n':
-    #     string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation']
+    #     string_list = ['Category', 'Small_RNA', 'Target_gene', 'sRNA_loc', 'Deg_loc', 'Deg_count', 'sRNA_seq', 'Shift', 'Gene_annotation|Marker']
     fo.write("\t".join(string_list) + "\n")
     for gene in int_:
         gene_annotation = annotation[gene]
@@ -421,7 +421,7 @@ if plot_function == 'y':
                                     continue
                                 plt.figure(figsize=(8,6))
                                 plt.grid(True)
-                                plt.title(vertified_sRNA+'/'+gene)
+                                plt.title(vertified_sRNA+'\n'+gene)
                                 plt.plot(x_coor,y_value,'o',color='black')
                                 plt.plot(red_x_coor,red_y_value,'o',color='red')
                                 plt.xlabel ("Nucleotide position (nt)")
