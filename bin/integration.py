@@ -1,5 +1,6 @@
 # %%
 from integrationFunction import *
+from generation_capacity import generation_capacity
 import sys
 
 def main1():
@@ -18,6 +19,7 @@ def main1():
     PHAS_Loci_out = 'integration_p.txt'
     allfile = 'integration_a.txt'
     intergrationfile = 'integration_s.txt'
+    as_apa_out = ''
     help = '''
     integration usage:
         option:
@@ -25,13 +27,14 @@ def main1():
             -io: file  --  phase module -o output file
             -ia: file  --  phase module -a output file
             -an: file  --  reference genome gff3 file
-            -g:  str  --  y | n, whether exist gdna based PHAS Loci
+            -g:  str   --  y | n, whether exist gdna based PHAS Loci
 
             # options with default value
             -o:  out  --  integration phasiRNA cluster, default name is integration_o.txt
             -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
             -s:  out  --  integration summary, default name is integration_s.txt
             -po: out  --  PHAS Loci information, default name is integration_p.txt
+            -ao: out  --  alternative splicing/alternative polyadenylation related PHAS gene, optional
             -j:  int   --  parallel number, default=1
             -pn: int   --  phase number, default=4
             -pl: int   --  phase length, 21 | 24, default=21
@@ -70,6 +73,11 @@ def main1():
                 pass
             else:
                 island_number = int(sys.argv[i+1])
+        elif sys.argv[i] == '-ao':
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                as_apa_out = str(sys.argv[i+1])
         elif sys.argv[i] == '-an':
             if sys.argv[i+1] == 'None':
                 pass
@@ -257,6 +265,10 @@ def main1():
     fo_allsiRNA.close()
     print(f'delete temporary folder {TMP_WD}/{tmp_folder}')
     os.system(f'rm -r {TMP_WD}/{tmp_folder}')
+
+    # detect AS/APA related sRNA
+    if as_apa_out != '':
+        generation_capacity(intergrationfile, gff3, as_apa_out)
 
 if __name__ == "__main__":
     main1()

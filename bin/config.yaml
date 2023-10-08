@@ -3,12 +3,12 @@
 # Configure the modules that need to be run
 # y means enable, n means disable
 Runing_module:
-  preprocess: y
-  phase: y
-  integration: y
-  visulization: y
+  preprocess: n
+  phase: n
+  integration: n
+  visulization: n
   initiator_prediction_and_verification:
-    target: y
+    target: n
     initiator: y
     deg: y
   phasiRNA_target_prediction_and_verification:
@@ -31,8 +31,8 @@ preprocess:
   # reference sequence fasta file
   # ** INPUT ** 
   reference_fasta: # disable when index parameter enable, multiple sequence can provided here
-    - /home/user/test_osa/oryza_sativa_cdna.fa
-    - /home/user/test_osa/oryza_sativa_gdna.fa
+    # - /home/user/test_osa/oryza_sativa_cdna.fa
+    # - /home/user/test_osa/oryza_sativa_gdna.fa
 
   # index prefix, reference_fasta option will be ignored when index enable, multiple index can provided here
   # ** INPUT ** 
@@ -169,6 +169,9 @@ integration:
   # PHAS Loci information
   # ** OUTPUT ** 
   integration_PHAS_Loci_info: integration_p.txt
+
+  # alternative splicing/alternative polyadenylation related PHAS gene, optional
+  as_apa_out: 
 
   # parallel number
   parallel_cores: 1
