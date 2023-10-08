@@ -1,5 +1,6 @@
 # %%
 from integrationFunction import *
+from generation_capacity import generation_capacity
 import sys
 
 def main1():
@@ -18,6 +19,7 @@ def main1():
     PHAS_Loci_out = 'integration_p.txt'
     allfile = 'integration_a.txt'
     intergrationfile = 'integration_s.txt'
+    as_apa_out = ''
     help = '''
     integration usage:
         option:
@@ -25,13 +27,14 @@ def main1():
             -io: file  --  phase module -o output file
             -ia: file  --  phase module -a output file
             -an: file  --  reference genome gff3 file
-            -g:  str  --  y | n, whether exist gdna based PHAS Loci
+            -g:  str   --  y | n, whether exist gdna based PHAS Loci
 
             # options with default value
             -o:  out  --  integration phasiRNA cluster, default name is integration_o.txt
             -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
             -s:  out  --  integration summary, default name is integration_s.txt
             -po: out  --  PHAS Loci information, default name is integration_p.txt
+            -ao: out  --  alternative splicing/alternative polyadenylation related PHAS gene, optional
             -j:  int   --  parallel number, default=1
             -pn: int   --  phase number, default=4
             -pl: int   --  phase length, 21 | 24, default=21
@@ -70,6 +73,11 @@ def main1():
                 pass
             else:
                 island_number = int(sys.argv[i+1])
+        elif sys.argv[i] == '-ao':
+            if sys.argv[i+1] == 'None':
+                pass
+            else:
+                as_apa_out = str(sys.argv[i+1])
         elif sys.argv[i] == '-an':
             if sys.argv[i+1] == 'None':
                 pass
@@ -139,32 +147,32 @@ def main1():
 
     Vprint(f'Start run {programName}', enable=True)
     print(f'Threads: {parallel_number}')
-    TMP_WD = os.getcwd()
+    TMP_WD = os.path.dirname(intergrationfile)
     ctime = GetCurTime()
     tmp_folder = f'{ctime}_tmpfolder'
     cmd = f'mkdir {tmp_folder}'
     os.system(cmd)
     # tmp file setting
-    tmp_gff_bed = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp_gff.bed'
-    tmp_hout_bed = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp_hout.bed'
-    tmp_pout_bed = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp_pout.bed'
-    tmp_Intergenic = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic'
-    tmp_Intergenic2 = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic2'
-    tmp_Intergenic1 = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic1'
-    tmp_Intergenic_ = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic_'
-    Non_intergenic = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Non_intergenic'
+    tmp_gff_bed = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp_gff.bed'
+    tmp_hout_bed = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp_hout.bed'
+    tmp_pout_bed = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp_pout.bed'
+    tmp_Intergenic = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic'
+    tmp_Intergenic2 = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic2'
+    tmp_Intergenic1 = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic1'
+    tmp_Intergenic_ = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic_'
+    Non_intergenic = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Non_intergenic'
     fo_phasiRNA = open(outfile, 'w')
     fo_allsiRNA = open(allfile, 'w')
-    tmp_fo_intergration = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_integration'
+    tmp_fo_intergration = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_integration'
     fo_intergration_tmp = open(tmp_fo_intergration, 'w')
     fo_intergration = open(intergrationfile, 'w')
     # ----------> loading data <------------
     print(f'Loading data')
     Gff3Tobed(gff3, tmp_gff_bed)
-    TMP_WD = os.getcwd()
+    TMP_WD = os.path.dirname(intergrationfile)
     ctime = GetCurTime()
-    tmp_phasiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{intergrationfile}_phasiRNA.txt'
-    tmp_allsiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{intergrationfile}_allsiRNA.txt'
+    tmp_phasiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{os.path.basename(intergrationfile)}_phasiRNA.txt'
+    tmp_allsiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{os.path.basename(intergrationfile)}_allsiRNA.txt'
     os.system(f'sort -k1,1 -k13,13 -k3,3 {phasiRNAfile} > {tmp_phasiRNAfile}')
     os.system(f'sort -k1,1 -k13,13 -k3,3 {allsiRNAfile} > {tmp_allsiRNAfile}')
     phasiRNA = LoadData(tmp_phasiRNAfile)
@@ -257,6 +265,10 @@ def main1():
     fo_allsiRNA.close()
     print(f'delete temporary folder {TMP_WD}/{tmp_folder}')
     os.system(f'rm -r {TMP_WD}/{tmp_folder}')
+
+    # detect AS/APA related sRNA
+    if as_apa_out != '':
+        generation_capacity(intergrationfile, gff3, as_apa_out)
 
 if __name__ == "__main__":
     main1()

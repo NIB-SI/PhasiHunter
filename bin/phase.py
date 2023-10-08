@@ -199,8 +199,10 @@ if __name__ == '__main__':
     setting2 = (windowLength, phase_length, phase_number, pvalue_cutoff, min_read_num, 'gdna')
     setting3 = (windowLength, phase_length, phase_number, pvalue_cutoff, min_read_num, 'flnc')
     TMP_WD = os.getcwd()
-    tmp_file = TMP_WD + '/' + tmpalloutputfilename + '_tmpfile.fa'
-    real_gdna_map = TMP_WD + '/' + tmpalloutputfilename + '_real_gdna_map.map'
+    tmp_file = os.path.realpath(tmpalloutputfilename) + '_tmpfile.fa'
+    real_gdna_map = os.path.realpath(tmpalloutputfilename) + '_real_gdna_map.map'
+    # tmp_file = TMP_WD + '/' + tmpalloutputfilename + '_tmpfile.fa'
+    # real_gdna_map = TMP_WD + '/' + tmpalloutputfilename + '_real_gdna_map.map'
     o_ = open(tmpoutputfilename, 'w+')
     all_ = open(tmpalloutputfilename, 'w+')
     # // Hypergeometric 

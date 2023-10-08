@@ -81,7 +81,7 @@ def main():
         Phase(data)
     if 'integration' in module_list:
         Integration(data)
-    if 'visualization' in module_list:
+    if 'visulization' in module_list:
         Visualization(data)
     if 'initiator_prediction_and_verification' in module_list and 'target' in module_list:
         Target(data)
@@ -182,6 +182,7 @@ def Integration(data):
     _a = integration_parameter['integration_allsiRNA_cluster']
     _s = integration_parameter['integration_summary']
     _po = integration_parameter['integration_PHAS_Loci_info']
+    _ao = integration_parameter['as_apa_out']
     _j = integration_parameter['parallel_cores']
     _pn = integration_parameter['phase_number_cutoff']
     _pl = integration_parameter['phase_length']
@@ -190,7 +191,7 @@ def Integration(data):
     _dp = integration_parameter['discard_only_P_method_result']
     _fn = integration_parameter['flnc_annotation_file']
 
-    cmd = f"phasiHunter integration -io {_io} -ia {_ia} -an {_an} -g {_g} -o {_o} -a {_a} -s {_s} -po {_po} -j {_j} -pn {_pn} -pl {_pl} -pv {_pv} -il {_il} -dp {_dp} {_fn}" 
+    cmd = f"phasiHunter integration -io {_io} -ia {_ia} -an {_an} -g {_g} -o {_o} -a {_a} -s {_s} -po {_po} -ao {_ao} -j {_j} -pn {_pn} -pl {_pl} -pv {_pv} -il {_il} -dp {_dp} -fn {_fn}" 
 
     print(cmd)
     os.system(cmd)
