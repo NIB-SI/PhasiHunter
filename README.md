@@ -6,7 +6,7 @@
   - [Installation](#installation)
     - [Manual Installation](#manual-installation)
     - [Docker image](#docker-image)
-    - [Conda configure file](#conda-configure-file)
+    - [Conda/mamba configure file](#condamamba-configure-file)
   - [Demo data](#demo-data)
   - [Executing PhasiHunter with step-by-step submodules.](#executing-phasihunter-with-step-by-step-submodules)
   - [Executing PhasiHunter with one-command module](#executing-phasihunter-with-one-command-module)
@@ -55,13 +55,13 @@ phasihunter is a CLI program runing on linux platform. The correction runing of 
     ![Alt text](image/image.png)
 
 ### Docker image
-**For convenience, we also provide a Docker image at `www.dockerhub`**
+**For convenience, we also provide a Docker image at `https://hub.docker.com/repository/docker/zacksfeng/phasihunter`**
 
 The Docker image has been configured with all the dependencies required for running phasiHunter.
 
-### Conda configure file
+### Conda/mamba configure file
 
-We also provide a conda environment configuration file. User can install all the required dependencies with command `conda install -f <env.yaml>`
+We also provide a conda/mamba environment configuration file. User can install all the required dependencies with command `conda/mamba install -f /foo/PhasiHunter/bin/env.yaml`
 
 ## Demo data
 **Download link**
