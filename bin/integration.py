@@ -147,32 +147,32 @@ def main1():
 
     Vprint(f'Start run {programName}', enable=True)
     print(f'Threads: {parallel_number}')
-    TMP_WD = os.getcwd()
+    TMP_WD = os.path.dirname(intergrationfile)
     ctime = GetCurTime()
     tmp_folder = f'{ctime}_tmpfolder'
     cmd = f'mkdir {tmp_folder}'
     os.system(cmd)
     # tmp file setting
-    tmp_gff_bed = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp_gff.bed'
-    tmp_hout_bed = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp_hout.bed'
-    tmp_pout_bed = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp_pout.bed'
-    tmp_Intergenic = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic'
-    tmp_Intergenic2 = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic2'
-    tmp_Intergenic1 = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic1'
-    tmp_Intergenic_ = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Intergenic_'
-    Non_intergenic = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_tmp.Non_intergenic'
+    tmp_gff_bed = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp_gff.bed'
+    tmp_hout_bed = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp_hout.bed'
+    tmp_pout_bed = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp_pout.bed'
+    tmp_Intergenic = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic'
+    tmp_Intergenic2 = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic2'
+    tmp_Intergenic1 = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic1'
+    tmp_Intergenic_ = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Intergenic_'
+    Non_intergenic = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_tmp.Non_intergenic'
     fo_phasiRNA = open(outfile, 'w')
     fo_allsiRNA = open(allfile, 'w')
-    tmp_fo_intergration = f'{TMP_WD}/{tmp_folder}/{intergrationfile}_{ctime}_integration'
+    tmp_fo_intergration = f'{TMP_WD}/{tmp_folder}/{os.path.basename(intergrationfile)}_{ctime}_integration'
     fo_intergration_tmp = open(tmp_fo_intergration, 'w')
     fo_intergration = open(intergrationfile, 'w')
     # ----------> loading data <------------
     print(f'Loading data')
     Gff3Tobed(gff3, tmp_gff_bed)
-    TMP_WD = os.getcwd()
+    TMP_WD = os.path.dirname(intergrationfile)
     ctime = GetCurTime()
-    tmp_phasiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{intergrationfile}_phasiRNA.txt'
-    tmp_allsiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{intergrationfile}_allsiRNA.txt'
+    tmp_phasiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{os.path.basename(intergrationfile)}_phasiRNA.txt'
+    tmp_allsiRNAfile = f'{TMP_WD}/{tmp_folder}/{ctime}{os.path.basename(intergrationfile)}_allsiRNA.txt'
     os.system(f'sort -k1,1 -k13,13 -k3,3 {phasiRNAfile} > {tmp_phasiRNAfile}')
     os.system(f'sort -k1,1 -k13,13 -k3,3 {allsiRNAfile} > {tmp_allsiRNAfile}')
     phasiRNA = LoadData(tmp_phasiRNAfile)

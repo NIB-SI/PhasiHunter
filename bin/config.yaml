@@ -3,12 +3,12 @@
 # Configure the modules that need to be run
 # y means enable, n means disable
 Runing_module:
-  preprocess: n
-  phase: n
-  integration: n
-  visulization: n
+  preprocess: y
+  phase: y
+  integration: y
+  visulization: y
   initiator_prediction_and_verification:
-    target: n
+    target: y
     initiator: y
     deg: y
   phasiRNA_target_prediction_and_verification:
@@ -40,11 +40,11 @@ preprocess:
     - /home/user/test_osa/index/oryza_sativa_cdna_index
     - /home/user/test_osa/index/oryza_sativa_gdna_index
 
-  # outfile name, relative path is work for outputfile, the number must be the same as the number of reference_fasta or indexe
+  # outfile name, relative path is work for outputfile, but absolute path is still recommended. The number must be the same as the number of reference_fasta or indexs
   # ** OUTPUT ** 
   outfile_name: 
-    - SRR5049781_processed_cdna.map
-    - SRR5049781_processed_gdna.map
+    - /home/user/test_osa/SRR5049781_processed_cdna.map
+    - /home/user/test_osa/SRR5049781_processed_gdna.map
 
   # adaptor trim parallel cores; <8 is recommend, only need in r mode
   trim_adaptor_cores: 1
@@ -69,6 +69,7 @@ preprocess:
 
 
 # Configure the phase module
+# predicting with only one reference sequence or multiple reference sequences
 phase:
   # map file based on reference transcriptome sequence
   # ** INPUT ** 
@@ -100,11 +101,11 @@ phase:
   
   # allsiRNA cluster output
   # ** OUTPUT ** 
-  allsiRNA_cluster_output: phase_a.txt
+  allsiRNA_cluster_output: /home/user/test_osa/phase_a.txt
   
   # phasiRNA cluster output file
   # ** OUTPUT ** 
-  phasiRNA_cluster_output: phase_o.txt
+  phasiRNA_cluster_output: /home/user/test_osa/phase_o.txt
   
   # phasiRNA prediction method, h(hypergeometric test) | p(phase score) | b (both)
   phasiRNA_prediction_method: b
@@ -156,22 +157,22 @@ integration:
 
   # integration phasiRNA cluster
   # ** OUTPUT ** 
-  integration_phasiRNA_cluster: integration_o.txt
+  integration_phasiRNA_cluster: /home/user/test_osa/integration_o.txt
 
   # integration all siRNA cluste
   # ** OUTPUT ** 
-  integration_allsiRNA_cluster: integration_a.txt
+  integration_allsiRNA_cluster: /home/user/test_osa/integration_a.txt
 
   # integration summary
   # ** OUTPUT ** 
-  integration_summary: integration_s.txt
+  integration_summary: /home/user/test_osa/integration_s.txt
 
   # PHAS Loci information
   # ** OUTPUT ** 
-  integration_PHAS_Loci_info: integration_p.txt
+  integration_PHAS_Loci_info: /home/user/test_osa/integration_p.txt
 
   # alternative splicing/alternative polyadenylation related PHAS gene, optional
-  as_apa_out: 
+  as_apa_out: /home/user/test_osa/as_apa_related_result.txt
 
   # parallel number
   parallel_cores: 1
@@ -211,15 +212,15 @@ visulization:
 
   # alignment file
   # ** OUTPUT ** 
-  output_alignment_file: alignment.txt
+  output_alignment_file: /home/user/test_osa/alignment.txt
 
   # phasiRNA fasta file
   # ** OUTPUT ** 
-  output_phasiRNA_fa: phasiRNA.fa
+  output_phasiRNA_fa: /home/user/test_osa/phasiRNA.fa
 
   # PHAS Gene fasta file, Format: >geneid/chr\tphasiRNA_cluster_region(start end)\tseq_region(start end)
   # ** OUTPUT ** 
-  output_PHAS_fa: PHAS.fa
+  output_PHAS_fa: /home/user/test_osa/PHAS.fa
 
   # phase length
   phase_length: 21
@@ -261,7 +262,7 @@ target:
 
   # output file
   # ** OUTPUT ** 
-  output: miR_target.txt
+  output: /home/user/test_osa/miR_target.txt
 
   # max. total mispairs
   total_misp: off
@@ -307,7 +308,7 @@ initiator:
 
   # outputfilename
   # ** OUTPUT ** 
-  outputfile: initiator.txt
+  outputfile: /home/user/test_osa/initiator.txt
 
 
 # Configure the deg module
@@ -331,6 +332,7 @@ deg:
   transcript_fa: /home/user/test_osa/oryza_sativa_cdna.fa
 
   # matched map file with only matched records
+  # filename only, do not input directory
   # ** OUTPUT ** 
   output: 
     - GSM1040649_MTI_deg.txt
@@ -375,7 +377,7 @@ phasiRNA_target:
 
   # output file
   # ** OUTPUT ** 
-  output: phasiRNA_target.txt
+  output: /home/user/test_osa/phasiRNA_target.txt
 
   # max. total mispairs
   total_misp: off
@@ -417,6 +419,7 @@ phasiRNA_deg:
   transcript_fa: /home/user/test_osa/oryza_sativa_cdna.fa
 
   # matched map file with only matched records
+  # filename only, do not input directory
   # ** OUTPUT ** 
   output: 
     - GSM1040649_PTI_deg.txt

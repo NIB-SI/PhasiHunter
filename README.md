@@ -4,6 +4,9 @@
   - [PhasiHunter workflow](#phasihunter-workflow)
   - [Dependencies](#dependencies)
   - [Installation](#installation)
+    - [Manual Installation](#manual-installation)
+    - [Docker image](#docker-image)
+    - [Conda configure file](#conda-configure-file)
   - [Demo data](#demo-data)
   - [Executing PhasiHunter with step-by-step submodules.](#executing-phasihunter-with-step-by-step-submodules)
   - [Executing PhasiHunter with one-command module](#executing-phasihunter-with-one-command-module)
@@ -32,27 +35,14 @@ phasihunter is a CLI program runing on linux platform. The correction runing of 
 - Fasta36 (Pearson and Lipman, 1988. Proc Natl Acad Sci U S A)
 - TarHunter (Ma, et al., 2018. Bioinformatics)
 
-```sh
-# Bowtie, Biopython, Bedtools, Trim_galore, Seqkit can install with conda conveniently.
-conda insatll bowtie biopython bedtools trim-galore, seqkit -c conda-forge -c bioconda -n <your conda env name>
-
-# Dnapi and TarHunter also include in PhasiHunter. Users do not need to download them separately
-
-# Fasta36 provied binary package, user can download from github website
-wget -c https://github.com/wrpearson/fasta36/releases/download/v36.3.8i_14-Nov-2020/fasta-36.3.8i-linux64.tar.gz
-tar -xzvf fasta-36.3.8i-linux64.tar.gz 
-cd fasta-36.3.8i/bin
-echo "export PATH=\$PATH:$PWD >> ~/.bashrc"
-
-# perl5 is pre-installed software in most unix distributions
-```
-
 ## Installation
-1. Clone phasihunter
+### Manual Installation
+1. Install all dependencies
+2. Clone phasihunter
 
     `git clone https://github.com/HuangLab-CBI/PhasiHunter.git .`
 
-2. Setting enviroment variable in ~/.bashrc
+3. Setting enviroment variable in ~/.bashrc
 
     `echo "export PATH=\$PATH:<phasihunter PATH> >> ~/.bashrc"`
 
@@ -60,23 +50,32 @@ echo "export PATH=\$PATH:$PWD >> ~/.bashrc"
     
     `echo "export PATH=\$PATH:/home/user/volumes/PhasiHunter >> ~/.bashrc"`
 
-3. type `phasihunter -h` to check phasihunter whether installation correct. If phasiHunter is installed correctly you will see the following content.
+4. type `phasihunter -h` to check phasihunter whether installation correct. If phasiHunter is installed correctly you will see the following content.
 
     ![Alt text](image/image.png)
+
+### Docker image
+**For convenience, we also provide a Docker image at `www.dockerhub`**
+
+The Docker image has been configured with all the dependencies required for running phasiHunter.
+
+### Conda configure file
+
+We also provide a conda environment configuration file. User can install all the required dependencies with command `conda install -f <env.yaml>`
 
 ## Demo data
 **Download link**
 
-`https://1drv.ms/f/s!Aqk7tovcy4lXgfww2afdr61P31YQBA?e=c0UMbz`
+`https://cbi.njau.edu.cn/PhasiHunter_demo_data/test_osa.tar.gz`
 
 ## Executing PhasiHunter with step-by-step submodules. 
 Parameter in < > means necessary; parameter in [ ] means optional
 
 1. Data pre-process
 ```bash
-phasiHunter preprocess -m <r> -i <SRR5049781.fastq.gz> -r <oryza_sativa_cdna.fa> -o [SRR5049781_cdna.map]
+phasiHunter preprocess -m r -i /home/user/test_osa/SRR5049781.fastq.gz -mi 19 -ma 25 -e 1 -n 1000000 -o /home/user/test_osa/SRR5049781_processed_cdna.map -in /home/user/test_osa/index/oryza_sativa_cdna_index
 
-phasiHunter preprocess -m <r> -i <SRR5049781.fastq.gz> -r <oryza_sativa_gdna.fa> -o [SRR5049781_gdna.map]
+phasiHunter preprocess -m m -i /home/user/test_osa/SRR5049781_trimmed_format_filter.fa -mi 19 -ma 25 -e 1 -n 1000000 -o /home/user/test_osa/SRR5049781_processed_gdna.map -in /home/user/test_osa/index/oryza_sativa_gdna_index
 ```
 
 - preprocess module usage
@@ -113,7 +112,7 @@ Help messeage:
 
 2. PhasiRNA and PHAS loci prediction
 ```bash 
-phasiHunter phase -cm <SRR5049781_cdna.map> -c <oryza_sativa_cdna.fa> -gm <SRR5049781_gdna.map> -g <oryza_sativa_gdna.fa> -fa <SRR7851621_trimmed_format_filter.fa> -a [SRR5049781_allsiRNA.txt] -o [SRR5049781_phasiRNA.txt] -pl [21] -j [10] -pv [0.0001] -ps [15] -pr [0.4] 
+phasiHunter phase -cm /home/user/test_osa/SRR5049781_processed_cdna.map -c /home/user/test_osa/oryza_sativa_cdna.fa -gm /home/user/test_osa/SRR5049781_processed_gdna.map -g /home/user/test_osa/oryza_sativa_gdna.fa -fm None -f None -fa /home/user/test_osa/SRR5049781_trimmed_format_filter.fa -a /home/user/test_osa/phase_a.txt -o /home/user/test_osa/phase_o.txt -me b -il 5 -pl 21 -pn 4 -mh 10 -j 20 -pv 0.001 -ps 15 -pr 0.4 -cl y
 ```
 - phase module usage
 ```txt
@@ -144,7 +143,7 @@ phase usage:
 
 3. PhasiRNA and PHAS loci result integration
 ```bash
-phasiHunter integration -io <SRR5049781_phasiRNA.txt> -ia <SRR5049781_allsiRNA.txt> -an <oryza_sativa_gdna.gff3> -o [SRR5049781_phasiRNA_dup.txt] -a [SRR5049781_allsiRNA_dup.txt] -s [SRR5049781_summary.txt] -po [SRR5049781_phas.txt] -g <y>
+phasiHunter integration -io /home/user/test_osa/phase_o.txt -ia /home/user/test_osa/phase_a.txt -an /home/user/test_osa/oryza_sativa_gdna.gff3 -g y -o /home/user/test_osa/integration_o.txt -a /home/user/test_osa/integration_a.txt -s /home/user/test_osa/integration_s.txt -po /home/user/test_osa/integration_p.txt -ao /home/user/test_osa/as_apa_related_result.txt -j 1 -pn 4 -pl 21 -pv 0.001 -il 5
 ```
 - integration module usage
 ```txt
@@ -154,13 +153,14 @@ integration usage:
     -io: file  --  phase module -o output file
     -ia: file  --  phase module -a output file
     -an: file  --  reference genome gff3 file
-    -g:  str  --  y | n, whether exist gdna based PHAS loci
+    -g:  str   --  y | n, whether exist gdna based PHAS Loci
 
     # options with default value
     -o:  out  --  integration phasiRNA cluster, default name is integration_o.txt
     -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
     -s:  out  --  integration summary, default name is integration_s.txt
-    -po: out  --  PHAS loci information, default name is integration_p.txt
+    -po: out  --  PHAS Loci information, default name is integration_p.txt
+    -ao: out  --  alternative splicing/alternative polyadenylation related PHAS gene, optional
     -j:  int   --  parallel number, default=1
     -pn: int   --  phase number, default=4
     -pl: int   --  phase length, 21 | 24, default=21
@@ -178,7 +178,7 @@ integration usage:
 
 4. Print phasiRNA_cluster plot, phasiRNA.fa, PHAS.fa
 ```bash
-phasiHunter visulization -io <SRR5049781_phasiRNA_dup.txt> -ia <SRR5049781_allsiRNA_dup.txt> -ip <SRR5049781_phas.txt> -a [SRR5049781_alignment.txt] -o [SRR5049781.phasiRNA.fa] -p [SRR5049781.PHAS.fa] -c [oryza_sativa_cdna.fa] -g [oryza_sativa_gdna.fa] -pc [y] -pg [y]
+phasiHunter visulization -io /home/user/test_osa/integration_o.txt -ia /home/user/test_osa/integration_a.txt -ip /home/user/test_osa/integration_p.txt -a /home/user/test_osa/alignment.txt -o /home/user/test_osa/phasiRNA.fa -p /home/user/test_osa/PHAS.fa -pl 21 -m 10 -c /home/user/test_osa/oryza_sativa_cdna.fa -g /home/user/test_osa/oryza_sativa_gdna.fa -f None -pc y -pg y -pf n
 ```
 - visulization module usage
 ```txt
@@ -211,11 +211,11 @@ visulization usage:
 
 5. Initiator prediction and verification
 ```bash 
-phasiHunter target -q <osa_miRNA.fa> -b <SRR5049781_PHAS.fa> -o <SRR5049781_miR.txt> -t
+phasiHunter target -q /home/user/test_osa/osa.miRbase.fa -b /home/user/test_osa/PHAS.fa -o /home/user/test_osa/miR_target.txt -T 10
 
-phasiHunter initiator -i <SRR5049781_phasiRNA_dup.txt> -j <SRR5049781_miR.txt> -ip <SRR5049781_phas.txt> -o <SRR5049781_initiator.txt>
+phasiHunter initiator -i /home/user/test_osa/integration_o.txt -j /home/user/test_osa/miR_target.txt -ip /home/user/test_osa/integration_p.txt -pd 5 -pl 21 -ps 1 -o /home/user/test_osa/initiator.txt
 
-phasiHunter deg -i <degradome_PHAS.map> -q <osa_miRNA.fa> -j <SRR5049781_initiator.txt> -t <SRR5049781_PHAS.fa> -o <SRR5049781_initiator_verified.txt> -in <y>
+phasiHunter deg -i /home/user/test_osa/deg/GSM1040649_format_filter.map -q /home/user/test_osa/osa.miRbase.fa -j /home/user/test_osa/initiator.txt -t /home/user/test_osa/oryza_sativa_cdna.fa -o GSM1040649_MTI_deg.txt -s 1 -m 0 -p y -in y -pl 1 -pf MTI_deg --lib GSM1040649 -less
 ```
 
 - target module usage
@@ -288,9 +288,9 @@ initiator option:
 
 6. PhasiRNA target prediction and verification
 ```bash
-phasiHunter target -q <SRR5049781_phasiRNA.fa> -t <oryza_sativa_cdna.fa> -o <SRR5049781_phasiRNA_target.txt>
+phasiHunter target -q /home/user/test_osa/phasiRNA.fa -b /home/user/test_osa/oryza_sativa_cdna.fa -o /home/user/test_osa/phasiRNA_target.txt -T 10
 
-phasiHunter deg -i <degradome_cdna.map> -q <SRR5049781_phasiRNA.fa> -j <SRR5049781_phasiRNA_target.txt> -t <oryza_sativa_cdna.fa> -o <SRR5049781_phasiRNA_target_verified.txt> -in <n>
+phasiHunter deg -i /home/user/test_osa/deg/GSM1040649_format_filter.map -q /home/user/test_osa/phasiRNA.fa -j /home/user/test_osa/phasiRNA_target.txt -t /home/user/test_osa/oryza_sativa_cdna.fa -o GSM1040649_PTI_deg.txt -s 1 -m 0 -p y -in n -pl 1 -pf PTI_deg --lib GSM1040649 -less
 ```
 
 ## Executing PhasiHunter with one-command module
@@ -345,8 +345,8 @@ preprocess:
   # reference sequence fasta file
   # ** INPUT ** 
   reference_fasta: # disable when index parameter enable, multiple sequence can provided here
-    - /home/user/test_osa/oryza_sativa_cdna.fa
-    - /home/user/test_osa/oryza_sativa_gdna.fa
+    # - /home/user/test_osa/oryza_sativa_cdna.fa
+    # - /home/user/test_osa/oryza_sativa_gdna.fa
 
   # index prefix, reference_fasta option will be ignored when index enable, multiple index can provided here
   # ** INPUT ** 
@@ -354,11 +354,11 @@ preprocess:
     - /home/user/test_osa/index/oryza_sativa_cdna_index
     - /home/user/test_osa/index/oryza_sativa_gdna_index
 
-  # outfile name, relative path is work for outputfile, the number must be the same as the number of reference_fasta or indexe
+  # outfile name, relative path is work for outputfile, but absolute path is still recommended. The number must be the same as the number of reference_fasta or indexs
   # ** OUTPUT ** 
   outfile_name: 
-    - SRR5049781_processed_cdna.map
-    - SRR5049781_processed_gdna.map
+    - /home/user/test_osa/SRR5049781_processed_cdna.map
+    - /home/user/test_osa/SRR5049781_processed_gdna.map
 
   # adaptor trim parallel cores; <8 is recommend, only need in r mode
   trim_adaptor_cores: 1
@@ -383,6 +383,7 @@ preprocess:
 
 
 # Configure the phase module
+# predicting with only one reference sequence or multiple reference sequences
 phase:
   # map file based on reference transcriptome sequence
   # ** INPUT ** 
@@ -414,11 +415,11 @@ phase:
   
   # allsiRNA cluster output
   # ** OUTPUT ** 
-  allsiRNA_cluster_output: phase_a.txt
+  allsiRNA_cluster_output: /home/user/test_osa/phase_a.txt
   
   # phasiRNA cluster output file
   # ** OUTPUT ** 
-  phasiRNA_cluster_output: phase_o.txt
+  phasiRNA_cluster_output: /home/user/test_osa/phase_o.txt
   
   # phasiRNA prediction method, h(hypergeometric test) | p(phase score) | b (both)
   phasiRNA_prediction_method: b
@@ -465,24 +466,27 @@ integration:
   # ** INPUT ** 
   gff3: /home/user/test_osa/oryza_sativa_gdna.gff3
 
-  # y | n, whether exist gdna based PHAS loci
-  gdna_based_PHAS_loci: y
+  # y | n, whether exist gdna based PHAS Loci
+  gdna_based_PHAS_Loci: y
 
   # integration phasiRNA cluster
   # ** OUTPUT ** 
-  integration_phasiRNA_cluster: integration_o.txt
+  integration_phasiRNA_cluster: /home/user/test_osa/integration_o.txt
 
   # integration all siRNA cluste
   # ** OUTPUT ** 
-  integration_allsiRNA_cluster: integration_a.txt
+  integration_allsiRNA_cluster: /home/user/test_osa/integration_a.txt
 
   # integration summary
   # ** OUTPUT ** 
-  integration_summary: integration_s.txt
+  integration_summary: /home/user/test_osa/integration_s.txt
 
-  # PHAS loci information
+  # PHAS Loci information
   # ** OUTPUT ** 
-  integration_PHAS_loci_info: integration_p.txt
+  integration_PHAS_Loci_info: /home/user/test_osa/integration_p.txt
+
+  # alternative splicing/alternative polyadenylation related PHAS gene, optional
+  as_apa_out: /home/user/test_osa/as_apa_related_result.txt
 
   # parallel number
   parallel_cores: 1
@@ -516,21 +520,21 @@ visulization:
   # ** INPUT ** 
   a_inputfile: /home/user/test_osa/integration_a.txt
 
-  # integration integration_PHAS_loci_info
+  # integration integration_PHAS_Loci_info
   # ** INPUT ** 
   p_inputfile: /home/user/test_osa/integration_p.txt
 
   # alignment file
   # ** OUTPUT ** 
-  output_alignment_file: alignment.txt
+  output_alignment_file: /home/user/test_osa/alignment.txt
 
   # phasiRNA fasta file
   # ** OUTPUT ** 
-  output_phasiRNA_fa: phasiRNA.fa
+  output_phasiRNA_fa: /home/user/test_osa/phasiRNA.fa
 
   # PHAS Gene fasta file, Format: >geneid/chr\tphasiRNA_cluster_region(start end)\tseq_region(start end)
   # ** OUTPUT ** 
-  output_PHAS_fa: PHAS.fa
+  output_PHAS_fa: /home/user/test_osa/PHAS.fa
 
   # phase length
   phase_length: 21
@@ -572,7 +576,7 @@ target:
 
   # output file
   # ** OUTPUT ** 
-  output: miR_target.txt
+  output: /home/user/test_osa/miR_target.txt
 
   # max. total mispairs
   total_misp: off
@@ -603,7 +607,7 @@ initiator:
   # ** INPUT ** 
   j_input_file: /home/user/test_osa/miR_target.txt
 
-  # integration module integration_PHAS_loci_info
+  # integration module integration_PHAS_Loci_info
   # ** INPUT ** 
   p_input_file: /home/user/test_osa/integration_p.txt
 
@@ -618,7 +622,7 @@ initiator:
 
   # outputfilename
   # ** OUTPUT ** 
-  outputfile: initiator.txt
+  outputfile: /home/user/test_osa/initiator.txt
 
 
 # Configure the deg module
@@ -642,6 +646,7 @@ deg:
   transcript_fa: /home/user/test_osa/oryza_sativa_cdna.fa
 
   # matched map file with only matched records
+  # filename only, do not input directory
   # ** OUTPUT ** 
   output: 
     - GSM1040649_MTI_deg.txt
@@ -686,7 +691,7 @@ phasiRNA_target:
 
   # output file
   # ** OUTPUT ** 
-  output: phasiRNA_target.txt
+  output: /home/user/test_osa/phasiRNA_target.txt
 
   # max. total mispairs
   total_misp: off
@@ -728,6 +733,7 @@ phasiRNA_deg:
   transcript_fa: /home/user/test_osa/oryza_sativa_cdna.fa
 
   # matched map file with only matched records
+  # filename only, do not input directory
   # ** OUTPUT ** 
   output: 
     - GSM1040649_PTI_deg.txt
@@ -759,6 +765,7 @@ phasiRNA_deg:
   # only output cat_1 and cat_2 information
   less: y
 ```
+
 ### The main output file
 - preprocess module
   - preprocessed fasta file
@@ -775,6 +782,7 @@ phasiRNA_deg:
   	- table header: gene, strand, sRNA_position, sRNA_abundance, sRNA_record, sRNA_sequence, sRNA_length, phase_ratio, phase_number, phase_abundance, phase_score, pvalue, gene_annotation, marker
   - integrated phasiRNA cluster output
   	- table header: PHAS_gene, strand, phasiRNA_position, phasiRNA_abundance, phasiRNA_record, phasiRNA_sequence, phasiRNA_length, phase_ratio, phase_number, phase_abundance, phase_score, pvalue, PHAS_gene_annotation, marker
+  - as_apa_related PHAS gene
 - visulization module
   - phasiRNA fasta file
     - id description: recorder__PHAS_gene__position__abundance_strand_order

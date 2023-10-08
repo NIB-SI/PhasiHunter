@@ -1,9 +1,6 @@
 # %%
 def main():
     import sys
-    import pandas as pd
-    import customeDic
-    import os
 
     help = '''
         Usage: python3 generation_capacity.py [integration_summary] [gff3] [output]
@@ -34,6 +31,9 @@ def main():
     generation_capacity(integration_s, feature_table, output)
 
 def generation_capacity(integration_s, feature_table, output):
+    import os
+    import customeDic
+    import pandas as pd
     print('Loading integration summary file')
     df_integration = pd.read_table(integration_s)
     print('Extract transcript id ...')
