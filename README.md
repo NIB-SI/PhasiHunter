@@ -143,7 +143,7 @@ phase usage:
 
 3. PhasiRNA and PHAS loci result integration
 ```bash
-phasiHunter integration -io /home/user/test_osa/phase_o.txt -ia /home/user/test_osa/phase_a.txt -an /home/user/test_osa/oryza_sativa_gdna.gff3 -g y -o /home/user/test_osa/integration_o.txt -a /home/user/test_osa/integration_a.txt -s /home/user/test_osa/integration_s.txt -po /home/user/test_osa/integration_p.txt -ao /home/user/test_osa/as_apa_related_result.txt -j 1 -pn 4 -pl 21 -pv 0.001 -il 5
+phasiHunter integration -io /home/user/test_osa/phase_o.txt -ia /home/user/test_osa/phase_a.txt -an /home/user/test_osa/oryza_sativa_gdna.gff3 -g y -o /home/user/test_osa/integration_o.txt -a /home/user/test_osa/integration_a.txt -s /home/user/test_osa/integration_s.txt -po /home/user/test_osa/integration_p.txt -j 1 -pn 4 -pl 21 -pv 0.001 -il 5
 ```
 - integration module usage
 ```txt
@@ -160,7 +160,6 @@ integration usage:
     -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
     -s:  out  --  integration summary, default name is integration_s.txt
     -po: out  --  PHAS Loci information, default name is integration_p.txt
-    -ao: out  --  alternative splicing/alternative polyadenylation related PHAS gene, optional
     -j:  int   --  parallel number, default=1
     -pn: int   --  phase number, default=4
     -pl: int   --  phase length, 21 | 24, default=21
@@ -485,9 +484,6 @@ integration:
   # ** OUTPUT ** 
   integration_PHAS_Loci_info: /home/user/test_osa/integration_p.txt
 
-  # alternative splicing/alternative polyadenylation related PHAS gene, optional
-  as_apa_out: /home/user/test_osa/as_apa_related_result.txt
-
   # parallel number
   parallel_cores: 1
 
@@ -782,7 +778,6 @@ phasiRNA_deg:
   	- table header: gene, strand, sRNA_position, sRNA_abundance, sRNA_record, sRNA_sequence, sRNA_length, phase_ratio, phase_number, phase_abundance, phase_score, pvalue, gene_annotation, marker
   - integrated phasiRNA cluster output
   	- table header: PHAS_gene, strand, phasiRNA_position, phasiRNA_abundance, phasiRNA_record, phasiRNA_sequence, phasiRNA_length, phase_ratio, phase_number, phase_abundance, phase_score, pvalue, PHAS_gene_annotation, marker
-  - as_apa_related PHAS gene
 - visulization module
   - phasiRNA fasta file
     - id description: recorder__PHAS_gene__position__abundance_strand_order

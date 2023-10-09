@@ -171,9 +171,6 @@ integration:
   # ** OUTPUT ** 
   integration_PHAS_Loci_info: /home/user/test_osa/integration_p.txt
 
-  # alternative splicing/alternative polyadenylation related PHAS gene, optional
-  as_apa_out: /home/user/test_osa/as_apa_related_result.txt
-
   # parallel number
   parallel_cores: 1
 

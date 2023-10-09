@@ -34,7 +34,6 @@ def main1():
             -a:  out  --  integration all siRNA cluster, default name is integration_a.txt
             -s:  out  --  integration summary, default name is integration_s.txt
             -po: out  --  PHAS Loci information, default name is integration_p.txt
-            -ao: out  --  alternative splicing/alternative polyadenylation related PHAS gene, optional
             -j:  int   --  parallel number, default=1
             -pn: int   --  phase number, default=4
             -pl: int   --  phase length, 21 | 24, default=21
