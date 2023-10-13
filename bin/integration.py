@@ -15,10 +15,10 @@ def main1():
     island_number = 5
     flnc_anno = ''
     gdna_enable = 'n'
-    outfile = 'integration_o.txt'
-    PHAS_Loci_out = 'integration_p.txt'
-    allfile = 'integration_a.txt'
-    intergrationfile = 'integration_s.txt'
+    outfile = './integration_o.txt'
+    PHAS_Loci_out = './integration_p.txt'
+    allfile = './integration_a.txt'
+    intergrationfile = './integration_s.txt'
     as_apa_out = ''
     help = '''
     integration usage:
