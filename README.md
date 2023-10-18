@@ -61,7 +61,7 @@ The Docker image has been configured with all the dependencies required for runn
 
 ### Conda/mamba configure file
 
-We also provide a conda/mamba environment configuration file. User can install all the required dependencies with command `conda/mamba install -f /foo/PhasiHunter/bin/env.yaml`
+We also provide a conda/mamba environment configuration file. User can install all the required dependencies with command `conda/mamba create -f /foo/PhasiHunter/bin/env.yaml`
 
 ## Demo data
 **Download link**
