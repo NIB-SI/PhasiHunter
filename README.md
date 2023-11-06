@@ -21,7 +21,7 @@ Welcome to phasihunter 😉
 A multithreaded program for mining phasiRNA regulation pathways based on multiple reference sequences.
 
 ## PhasiHunter workflow
-<img src="image/image-1.png" alt="Image" width="600">
+<img src="image/MainFig_600dpi.jpg" alt="Image" width="600">
 
 ## Dependencies
 phasihunter is a CLI program runing on linux platform. The correction runing of phasihunter depends on some existing softwares.
@@ -780,9 +780,9 @@ phasiRNA_deg:
   	- table header: PHAS_gene, strand, phasiRNA_position, phasiRNA_abundance, phasiRNA_record, phasiRNA_sequence, phasiRNA_length, phase_ratio, phase_number, phase_abundance, phase_score, pvalue, PHAS_gene_annotation, marker
 - visulization module
   - phasiRNA fasta file
-    - id description: recorder__PHAS_gene__position__abundance_strand_order
+    - id description: recorder__PHAS_gene__position__abundance__strand__order
   - PHAS loci fasta file
-    - id description: recorder__PHAS_gene__[start]\_\_[end]\_\_[extend_start]\_\_[extend_end]__[marker]
+    - id description: recorder__PHAS_gene__[start]\_\_[end]\_\_[extend_start]\_\_[extend_end]\_\_[marker]
   - phasiRNA alignment result
   - phasiRNA cluster plot
 - initiator_prediction_and_verification
