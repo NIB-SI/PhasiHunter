@@ -42,9 +42,11 @@ Python packages also required:
 
 ## Installation
 ### Manual Installation
-1. Clone phasihunter
+1. Clone phasihunter repository
 
-    `git clone https://github.com/HuangLab-CBI/PhasiHunter.git`
+Using git:
+
+    git clone https://github.com/HuangLab-CBI/PhasiHunter.git
 
 2. Install all dependencies
 
@@ -53,6 +55,7 @@ You can manually install each dependency listed above, or alternatively a conda 
     conda env create  --file environment.yml
 
 (If you have mamba installed you can replace `conda` in the above command with `mamba`.)
+
 Access the dependencies using:
 
     conda activate phasiHunter
@@ -66,11 +69,11 @@ In the activated conda environemnt, run:
 
 Otherwise you can add phasiHunter to your PATH by setting the enviroment variable in ~/.bashrc
 
-    `echo "export PATH=$PATH:<phasihunter PATH> >> ~/.bashrc"`
+    echo "export PATH=$PATH:<phasihunter PATH> >> ~/.bashrc"
 
-    example:
+example:
     
-    `echo "export PATH=$PATH:/home/user/volumes/PhasiHunter >> ~/.bashrc"`
+    echo "export PATH=$PATH:/home/user/volumes/PhasiHunter >> ~/.bashrc"
 
 4. type `phasiHunter -h` to check whether the installation was correct. If phasiHunter is installed correctly you will see the following content.
 
