@@ -31,7 +31,7 @@ Usage:
 version = '''
 '''
 
-def try_gzip_open(file, type): # Zerong Feng append
+def try_gzip_open(file, type):    # Zerong Feng append
     """_summary_
 
     Arguments:
@@ -41,12 +41,7 @@ def try_gzip_open(file, type): # Zerong Feng append
     Returns:
         object -- File handle object
     """
-    if ".gz" in file:
-        fn = gzip.open(file, type)
-        return fn
-    else:
-        fn = open(file, type)
-        return fn
+    return gzip.open(file, type) if ".gz" in file else open(file, type)
 # ----------> end <------------
 
 for i in range(1, len(sys.argv)):
@@ -77,11 +72,11 @@ if inputfile=="" or outputfilename=="":
 if compression == 0:
     o=open(outputfilename, 'w')
 elif compression == 1:
-    if ".gz" in outputfilename:
-        o = gzip.open(outputfilename, 'wt')
-    else:
-        o = gzip.open(outputfilename+".gz", 'wt')
-
+    o = (
+        gzip.open(outputfilename, 'wt')
+        if ".gz" in outputfilename
+        else gzip.open(f"{outputfilename}.gz", 'wt')
+    )
 for query in SeqIO.parse(try_gzip_open(inputfile, 'rt'), 'fasta'):
     name = query.id
     seq = str(query.seq)
@@ -91,5 +86,5 @@ for query in SeqIO.parse(try_gzip_open(inputfile, 'rt'), 'fasta'):
         exp = float(name.split("_")[1])
     seqlen = len(seq)
     if exp>=min_read_count and seqlen>=min and seqlen<=max:
-        o.write(">"+name+"\n"+seq+"\n")
+        o.write(f">{name}" + "\n" + seq + "\n")
 o.close()

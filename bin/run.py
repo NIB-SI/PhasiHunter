@@ -5,7 +5,7 @@ import subprocess
 import yaml
 
 def main():
-    inp = os.path.dirname(__file__) + '/config.yaml'
+    inp = f'{os.path.dirname(__file__)}/config.yaml'
     default_config = ''
     help = f'''
         One command executing mode
@@ -45,32 +45,34 @@ def main():
     else:
         with open(inp, 'r') as fn:
             data = yaml.load(fn, Loader=yaml.FullLoader)
-        
+
     Runing_module = data['Runing_module']
 
-    module_list = list()
-    for k,v in Runing_module.items():
+    module_list = []
+    for k, v in Runing_module.items():
         if type(v) != dict:
             if Runing_module[k] == 'y':
                 module_list.append(k)
         if type(v) == dict:
             for i in Runing_module[k]:
                 if Runing_module[k][i] == 'y':
-                    if k in module_list:
-                        pass
-                    else:
+                    if k not in module_list:
                         module_list.append(k)
                     module_list.append(i)
 
     string = ''
-    for i in (module_list):
-        if i == 'target' or i == 'initiator' or i== 'deg' or i == 'phasiRNA_target' or i == 'phasiRNA_deg':
+    for i in module_list:
+        if i in [
+            'target',
+            'initiator',
+            'deg',
+            'phasiRNA_target',
+            'phasiRNA_deg',
+        ]:
             string += '    '
-            string += i + '\n'
         else:
             string += '  '
-            string += i + '\n'
-
+        string += i + '\n'
     print('Runing Module:  ')
     print(string)
 
@@ -83,16 +85,18 @@ def main():
         Integration(data)
     if 'visulization' in module_list:
         Visualization(data)
-    if 'initiator_prediction_and_verification' in module_list and 'target' in module_list:
-        Target(data)
-    if 'initiator_prediction_and_verification' in module_list and 'initiator' in module_list:
-        Initiator(data)
-    if 'initiator_prediction_and_verification' in module_list and 'deg' in module_list:
-        Deg(data)
-    if 'phasiRNA_target_prediction_and_verification' in module_list and 'phasiRNA_target' in module_list:
-        phasiRNA_target(data)
-    if 'phasiRNA_target_prediction_and_verification' in module_list and 'phasiRNA_deg' in module_list:
-        phasiRNA_deg(data)
+    if 'initiator_prediction_and_verification' in module_list:
+        if 'target' in module_list:
+            Target(data)
+        if 'initiator' in module_list:
+            Initiator(data)
+        if 'deg' in module_list:
+            Deg(data)
+    if 'phasiRNA_target_prediction_and_verification' in module_list:
+        if 'phasiRNA_target' in module_list:
+            phasiRNA_target(data)
+        if 'phasiRNA_deg' in module_list:
+            phasiRNA_deg(data)
     print('Analysis finished')
 
 
@@ -107,11 +111,10 @@ def Preprocess(data):
         print('Index exsits')
         if data['preprocess']['reference_fasta'] != None and len(data['preprocess']['reference_fasta']) > 0:
             print('Reference sequence also exsit, which will be ignored')
-        for i in data['preprocess']['index']:
-            index_list.append(i)
+        index_list.extend(iter(data['preprocess']['index']))
     else:
         print('No index exist, build index with reference_fasta')
-        cmd = f"[ -e index ] || mkdir index"
+        cmd = "[ -e index ] || mkdir index"
         os.system(cmd)
         for i in range(0, len(data['preprocess']['reference_fasta'])):
             bindex=f"index/{data['preprocess']['reference_fasta'][i].split('.')[0].split('/')[-1]}"
@@ -124,7 +127,9 @@ def Preprocess(data):
         for process in preprocess_subprocess:
             process.wait()
 
-        all_finished = all([process.poll() is not None for process in preprocess_subprocess])
+        all_finished = all(
+            process.poll() is not None for process in preprocess_subprocess
+        )
 
         if all_finished:
             print("All index build finished")
@@ -249,7 +254,7 @@ def Target(data):
     # if _i == None:
     #     _i = 0
     _T = target_paramter['threads']
-    if _T == None:
+    if _T is None:
         _T = 1
 
     # cmd = f"phasiHunter target -q {_q} -b {_b} -o {_o} -M {_M} -m {_m} -f {_f} -I {_I} -i {_i} -T {_T}" 
@@ -296,11 +301,7 @@ def Deg(data):
     __lib = deg_parameter['library']
     _less = deg_parameter['less']
 
-    if _less == 'y':
-        _less = '-less'
-    else:
-        _less = ''
-
+    _less = '-less' if _less == 'y' else ''
     preprocess_subprocess = []
     if len(__lib) != len(_i):
         print('There are not enough library name, ignore add library column')
@@ -319,7 +320,9 @@ def Deg(data):
     for process in preprocess_subprocess:
         process.wait()
 
-    all_finished = all([process.poll() is not None for process in preprocess_subprocess])
+    all_finished = all(
+        process.poll() is not None for process in preprocess_subprocess
+    )
 
     if all_finished:
         print("All deg module analysis finished")
@@ -350,7 +353,7 @@ def phasiRNA_target(data):
     # if _i == None:
     #     _i = 0
     _T = phasiRNA_target_parameter['threads']
-    if _T == None:
+    if _T is None:
         _T = 1
 
     # cmd = f"phasiHunter target -q {_q} -b {_b} -o {_o} -M {_M} -m {_m} -f {_f} -I {_I} -i {_i} -T {_T}" 
@@ -379,11 +382,7 @@ def phasiRNA_deg(data):
     __lib = phasiRNA_deg_parameter['library']
     _less = phasiRNA_deg_parameter['less']
 
-    if _less == 'y':
-        _less = '-less'
-    else:
-        _less = ''
-
+    _less = '-less' if _less == 'y' else ''
     if _in == 'y':
         print('WARNIG: -in must no when executing phasiRNA target verification')
         sys.exit()
@@ -406,7 +405,9 @@ def phasiRNA_deg(data):
     for process in preprocess_subprocess:
         process.wait()
 
-    all_finished = all([process.poll() is not None for process in preprocess_subprocess])
+    all_finished = all(
+        process.poll() is not None for process in preprocess_subprocess
+    )
 
     if all_finished:
         print("All deg module analysis finished")

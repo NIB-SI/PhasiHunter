@@ -3,14 +3,12 @@ from customeDic import *
 from Bio import SeqIO
 
 def convertFa(inp):
-    count = 1
-    for query in SeqIO.parse(inp,"fasta"):
+    for count, query in enumerate(SeqIO.parse(inp,"fasta"), start=1):
         name = query.id
         seq = str(query.seq)
         ele = name.split('@')
         abun = ele[1]
         print(f'>t{count}_x{abun}\n{seq}')
-        count += 1
 
 def convertgDNA(inp):
     for query in SeqIO.parse(inp, 'fasta'):

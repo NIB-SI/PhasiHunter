@@ -19,7 +19,7 @@ def rm_temp_dir(temp_dir):
     """
     if temp_dir:
         if os.path.exists(temp_dir):
-            subprocess.call("rm -r {}".format(temp_dir).split())
+            subprocess.call(f"rm -r {temp_dir}".split())
 
 
 def clip_adapter(fp, aseed, tm5, tm3, min_len, max_len):
@@ -27,7 +27,7 @@ def clip_adapter(fp, aseed, tm5, tm3, min_len, max_len):
 
     """
     seed_len = len(aseed)
-    pp = re.compile("(.*)"+aseed, re.IGNORECASE)
+    pp = re.compile(f"(.*){aseed}", re.IGNORECASE)
     for seq in fastq_sequence(fp):
         if len(seq) < tm5 or len(seq) < tm3:
             raise Exception("trimming length is too large")
@@ -37,7 +37,7 @@ def clip_adapter(fp, aseed, tm5, tm3, min_len, max_len):
         end = match.end() - seed_len
         clipped_seq = seq[tm5 : end-tm3]
         L = len(clipped_seq)
-        if min_len <= L and L <= max_len:
+        if min_len <= L <= max_len:
             yield clipped_seq
 
 
@@ -55,11 +55,10 @@ def to_fasta(fastq, fasta, aseed, tm5, tm3, min_len, max_len):
     clean_read_count = 0
     for seq in iterator:
         fas[seq] = fas.get(seq, 0) + 1
-    fa_obj = open(fasta, "w")
-    for seq, cnt in fas.items():
-        clean_read_count += cnt
-        fa_obj.write(">{0}_{1}\n{0}\n".format(seq, cnt))
-    fa_obj.close()
+    with open(fasta, "w") as fa_obj:
+        for seq, cnt in fas.items():
+            clean_read_count += cnt
+            fa_obj.write(">{0}_{1}\n{0}\n".format(seq, cnt))
     fq_obj.close()
     return clean_read_count
 
@@ -73,19 +72,18 @@ def fastq_input_prep(fastq, ratio, temp_dir):
     num = int(1/ratio)
     read_count = 0.0
     stats = {}
-    fq_out = "{}/input.fq".format(temp_dir)
+    fq_out = f"{temp_dir}/input.fq"
     fq_obj = get_file_obj(fastq)
-    fout = open(fq_out, "w")
-    for i, rec in enumerate(fastq_record(fq_obj)):
-        if i % num == 0:
-            fout.write(rec)
-            read_count += 1
-            L = len(rec.split("\n")[1])
-            stats[L] = stats.get(L,0) + 1
-    fout.close()
+    with open(fq_out, "w") as fout:
+        for i, rec in enumerate(fastq_record(fq_obj)):
+            if i % num == 0:
+                fout.write(rec)
+                read_count += 1
+                L = len(rec.split("\n")[1])
+                stats[L] = stats.get(L,0) + 1
     fq_obj.close()
-    mean = sum([L*c for L,c in stats.items()]) / read_count
-    sum_square = sum([(L-mean)**2 * c for L,c in stats.items()])
+    mean = sum(L*c for L,c in stats.items()) / read_count
+    sum_square = sum((L-mean)**2 * c for L,c in stats.items())
     sd = (sum_square / read_count)**0.5
     return fq_out, read_count, sd
 
@@ -103,8 +101,7 @@ def count_mapped_read_sam(samout):
         x = x.rstrip().split("\t")
         if x[2] != '*':
             mapped.add(x[0])
-    cnt = sum([int(n.split('_')[1]) for n in mapped])
-    return cnt
+    return sum(int(n.split('_')[1]) for n in mapped)
 
 
 def map_clean_reads(fastq, adapter, tm5, tm3,
@@ -114,7 +111,7 @@ def map_clean_reads(fastq, adapter, tm5, tm3,
 
     """
     fasta = "{0}/insert_{1}.fa".format(temp_dir, adapter)
-    samout = "{}/output.sam".format(temp_dir)
+    samout = f"{temp_dir}/output.sam"
     clipped = to_fasta(fastq, fasta, adapter, tm5, tm3, min_len, max_len)
     map_command = map_command.replace("@in",fasta).replace("@out",samout)
     map_command += " 2> /dev/null"
@@ -129,15 +126,21 @@ def make_stats_report(table, sampled_read, subsample_rate, prefix_match,
     """Report read statistics with predicted adapters.
 
     """
-    out = ["# sampled_reads={} (total_reads * {:.2f})".format(
-              int(sampled_read), subsample_rate)]
-    out.append("\t".join([
-          "# 3'adapter",
-          "reads_extracted",
-          "(reads_extracted/sampled_reads)%",
-          "reads_mapped",
-          "(reads_mapped/sampled_reads)%",
-          "params_k:r"]))
+    out = [
+        "# sampled_reads={} (total_reads * {:.2f})".format(
+            int(sampled_read), subsample_rate
+        ),
+        "\t".join(
+            [
+                "# 3'adapter",
+                "reads_extracted",
+                "(reads_extracted/sampled_reads)%",
+                "reads_mapped",
+                "(reads_mapped/sampled_reads)%",
+                "params_k:r",
+            ]
+        ),
+    ]
     max_mapped_read = -1
     max_index = -1
     for i, x in enumerate(table):
@@ -155,22 +158,18 @@ def make_stats_report(table, sampled_read, subsample_rate, prefix_match,
             out.append("# input reads look already clean!")
         else:
             optimal.append("?")
-    else:
-        if no_output_files:
-            pass
-        else:
-            if not os.path.exists(output_dir):
-                subprocess.call("mkdir {}".format(output_dir).split())
-            aseq = optimal[0][:prefix_match]
-            fa_tmp = "{}/insert_{}.fa".format(temp_dir, aseq)
-            fa_out = "{}/{}_{}.fa".format(output_dir, fq_prefix, aseq)
-            subprocess.call(("mv {} {}".format(fa_tmp,fa_out)).split())
+    elif not no_output_files:
+        if not os.path.exists(output_dir):
+            subprocess.call(f"mkdir {output_dir}".split())
+        aseq = optimal[0][:prefix_match]
+        fa_tmp = f"{temp_dir}/insert_{aseq}.fa"
+        fa_out = f"{output_dir}/{fq_prefix}_{aseq}.fa"
+        subprocess.call(f"mv {fa_tmp} {fa_out}".split())
 
-    out.insert(0, "optimal_3'adapter={}\n".format(''.join(optimal)))
+    out.insert(0, f"optimal_3'adapter={''.join(optimal)}\n")
     report = "\n".join(out)
     print(report)
 
     if not no_output_files:
-        f = open("{}/{}_report.txt".format(output_dir, fq_prefix), "w")
-        f.write(report + "\n")
-        f.close()
+        with open(f"{output_dir}/{fq_prefix}_report.txt", "w") as f:
+            f.write(report + "\n")

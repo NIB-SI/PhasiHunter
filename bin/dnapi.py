@@ -35,16 +35,15 @@ def convert_interval(s_in, s_op, func):
         raise Exception(msg.format("value", s_op, s_in))
     if len(s) == 1:
         return s
-    if len(s) == 3:
-        beg, end, interval = s
-        values = []
-        while beg < end:
-            values.append(beg)
-            beg += interval
-        values.append(end)
-        return values
-    else:
+    if len(s) != 3:
         raise Exception(msg.format("interval", s_op, s_in))
+    beg, end, interval = s
+    values = []
+    while beg < end:
+        values.append(beg)
+        beg += interval
+    values.append(end)
+    return values
 
 
 def parse_args():
@@ -59,8 +58,11 @@ def parse_args():
     parser.add_argument("FASTQ",
         type=str,
         help="including stdin or compressed file {zip,gz,tar,bz}")
-    parser.add_argument("--version", action="version",
-        version="%(prog)s {}".format(dnapilib.__version__))
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {dnapilib.__version__}",
+    )
 
     predop = parser.add_argument_group("adapter prediction parameters")
     predop.add_argument("-k",
@@ -139,7 +141,7 @@ def parse_args():
                 raise Exception(err_find.format(soft))
         else:
             try:
-                subprocess.call("which {}".format(soft).split())
+                subprocess.call(f"which {soft}".split())
             except OSError:
                 raise Exception(err_find.format(soft))
         if not re.findall("@in", args.map_command):
@@ -156,7 +158,7 @@ def parse_args():
             raise Exception("bad value: --trim-5p")
         if args.trim_3p < 0:
             raise Exception("bad value: --trim-3p")
-        if args.subsample_rate <= 0 or 1 < args.subsample_rate:
+        if args.subsample_rate <= 0 or args.subsample_rate > 1:
             raise Exception("bad subsampling rate")
         global MAP_TO_GENOME
         MAP_TO_GENOME = True
@@ -184,9 +186,8 @@ def main():
 
     else:
         global TEMP_DIR
-        TEMP_DIR = "{}/DNApi_tmp_{}".format(
-            args.temp_dir, str(uuid.uuid4()))
-        subprocess.call(("mkdir {}".format(TEMP_DIR)).split())
+        TEMP_DIR = f"{args.temp_dir}/DNApi_tmp_{str(uuid.uuid4())}"
+        subprocess.call(f"mkdir {TEMP_DIR}".split())
 
         original_fastq = fastq
         fastq, total_read, sd = fastq_input_prep(
@@ -194,7 +195,7 @@ def main():
 
         if args.seq:
             adapts = set(args.seq)
-            setstr = ["user-input" for i in range(len(adapts))]
+            setstr = ["user-input" for _ in range(len(adapts))]
         else:
             msg = "warning: predicted adapter is too short (<{0}): '{1}'\n" \
                 + "warning: '{1}' will not be further investigated\n"
@@ -238,6 +239,6 @@ if __name__ == "__main__":
     except Exception as e:
         prog = os.path.basename(sys.argv[0])
         rm_temp_dir(TEMP_DIR)
-        sys.exit("{}: error: {}".format(prog, str(e)))
+        sys.exit(f"{prog}: error: {str(e)}")
     finally:
         rm_temp_dir(TEMP_DIR)

@@ -66,7 +66,7 @@ startline=1
 left=0
 compression=0
 
-def try_gzip_open(file, type): # Zerong Feng append
+def try_gzip_open(file, type):    # Zerong Feng append
     """_summary_
 
     Arguments:
@@ -76,12 +76,7 @@ def try_gzip_open(file, type): # Zerong Feng append
     Returns:
         object -- File handle object
     """
-    if ".gz" in file:
-        fn = gzip.open(file, type)
-        return fn
-    else:
-        fn = open(file, type)
-        return fn
+    return gzip.open(file, type) if ".gz" in file else open(file, type)
 # ----------> end <------------
 for i in range(1,len(sys.argv)):
     if sys.argv[i]=='-i':
@@ -133,7 +128,7 @@ if fastatitle=='':
 
 if startline>1:
     print("First line be processed:", startline)
-    if formatin=='f' or formatin=='f1':
+    if formatin in ['f', 'f1']:
         print('Warning: -b not for -it f or f1; -b was ignored.')
 
 if inputfilename=='' or outputfilename=='':
@@ -154,16 +149,16 @@ nfn=0
 if compression == 0:
     w=open(outputfilename, 'w')
 elif compression == 1:
-    if ".gz" in outputfilename:
-        w = gzip.open(outputfilename, 'wt')
-    else:
-        w = gzip.open(outputfilename+".gz", 'wt')
-
+    w = (
+        gzip.open(outputfilename, 'wt')
+        if ".gz" in outputfilename
+        else gzip.open(f"{outputfilename}.gz", 'wt')
+    )
 total_seq=0
 
 # ----------> count total number <------------
 print("Counting total reads...")
-ll=0 
+ll=0
 filee=try_gzip_open(inputfilename, 'rt')
 heads = ["A","G","C","T"]
 
@@ -185,7 +180,7 @@ elif formatin=='p':
     for sp in filee:
         ll+=1
         if ll>=startline:
-            if sp!='' and sp!='\n':
+            if sp not in ['', '\n']:
                 total_seq+=1
 elif formatin=='f1':
     for s1 in SeqIO.parse(try_gzip_open(inputfilename,'rt'),'fasta'):
@@ -199,10 +194,7 @@ def poly(seq):
     if polyA==0: return 0
     polya=float(seq.count ("A"))
     polyt=float(seq.count ("T"))
-    if polya/len(seq)>=0.82 or polyt/len(seq)>=0.82:
-        return 1
-    else:
-        return 0
+    return 1 if polya/len(seq)>=0.82 or polyt/len(seq)>=0.82 else 0
 
 ll=0
 if formatin=='g':
