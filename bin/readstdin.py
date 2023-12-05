@@ -64,8 +64,7 @@ def reSplit(pattern, string):
     list
         splited list
     """
-    l = re.split(pattern, string)
-    return l 
+    return re.split(pattern, string) 
 
 def convertFormat(fo):
     # chr_start:end to chr start end
@@ -216,7 +215,7 @@ def extractFeature(fo):
     for i in fo:
         l = i.split('\t')
         length = len(l)
-        group = int(length/3)
+        group = length // 3
         for i in range(0, group):
             if i == 0: 
                 candidate = f'{l[0 + i*3]}\t{l[ 1 + i*3]}\t{l[2 + i*3]}'
@@ -320,17 +319,16 @@ def exonInfo(fo):
             except IndexError:
                 end = int(region[0])
 
+            former_start = start
             # print(f'end:{end}')
             # print(f'start:{start}')
             if count == 1:
-                former_start = start
                 print(f'{rna}\t{start - former_start + 1}\t{end - start}')
                 count += 1
                 former_end = end - start
             else:
                 print(f'{rna}\t{former_end+1}\t{end - start + former_end}')
                 former_end = end - start + former_end
-                former_start = start
 
 def filterStartLargerThanEnd(fo):
     for i in fo:
@@ -356,22 +354,21 @@ def extractForphasiRNA(fo):
         l[0], l[1], l[2], l[3], l[4], l[5], l[6], l[7], l[8], l[9], l[10], l[11], l[12], l[13], l[14], l[15], l[16], l[17], l[18], l[19]
         if cluster_number == 'cluster_number':
             continue
-        else:
-            if 'C' in ref:
-                if 'H' in method:
-                    print(f'{geneid} {feature} HC')
-                elif 'P' in method:
-                    print(f'{geneid} {feature} PC')
-            elif 'F' in ref:
-                if 'H' in method:
-                    print(f'{geneid} {feature} HF')
-                elif 'P' in method:
-                    print(f'{geneid} {feature} PF')
-            elif 'G' in ref:
-                if 'H' in method:
-                    print(f'{geneid} {feature} HG')
-                elif 'P' in method:
-                    print(f'{geneid} {feature} PG')
+        if 'C' in ref:
+            if 'H' in method:
+                print(f'{geneid} {feature} HC')
+            elif 'P' in method:
+                print(f'{geneid} {feature} PC')
+        elif 'F' in ref:
+            if 'H' in method:
+                print(f'{geneid} {feature} HF')
+            elif 'P' in method:
+                print(f'{geneid} {feature} PF')
+        elif 'G' in ref:
+            if 'H' in method:
+                print(f'{geneid} {feature} HG')
+            elif 'P' in method:
+                print(f'{geneid} {feature} PG')
 
 def extractForPHASLoci(fo):
     for i in fo:
@@ -380,74 +377,73 @@ def extractForPHASLoci(fo):
         l[0], l[1], l[2], l[3], l[4], l[5], l[6], l[7], l[8], l[9], l[10], l[11], l[12], l[13], l[14], l[15], l[16], l[17], l[18], l[19]
         if cluster_number == 'cluster_number':
             continue
-        else:
-            if 'C' in ref:
-                if 'H' in method:
-                    for coor in htc.split(','):
-                        if coor != '-':
-                            tmp = coor.replace('(', '').replace(')', '').split(':')
-                            start = tmp[0]
-                            end = tmp[1]
-                            if feature == 'Intergenic':
-                                print(f'{geneid} Other:{feature} HC {start} {end}')
-                            else:
-                                print(f'{geneid} {feature}:{geneid} HC {start} {end}')
-                elif 'P' in method:
-                    for coor in ptc.split(','):
-                        if coor != '-':
-                            tmp = coor.replace('(', '').replace(')', '').split(':')
-                            start = tmp[0]
-                            end = tmp[1]
-                            if feature == 'Intergenic':
-                                print(f'{geneid} Other:{feature} PC {start} {end}')
-                            else:
-                                print(f'{geneid} {feature}:{geneid} PC {start} {end}')
-            elif 'F' in ref:
-                if 'H' in method:
-                    for coor in hfc.split(','):
-                        if coor != '-':
-                            tmp = coor.replace('(', '').replace(')', '').split(':')
-                            start = tmp[0]
-                            end = tmp[1]
-                            
-                            if feature == 'Intergenic':
-                                print(f'{geneid} Other:{feature} HF {start} {end}')
-                            else:
-                                print(f'{geneid} {feature}:{geneid} HF {start} {end}')
-                elif 'P' in method:
-                    for coor in pfc.split(','):
-                        if coor != '-':
-                            tmp = coor.replace('(', '').replace(')', '').split(':')
-                            start = tmp[0]
-                            end = tmp[1]
-                            
-                            if feature == 'Intergenic':
-                                print(f'{geneid} Other:{feature} PF {start} {end}')
-                            else:
-                                print(f'{geneid} {feature}:{geneid} PF {start} {end}')
-            elif 'G' in ref:
-                if 'H' in method:
-                    for coor in hgc.split(','):
-                        if coor != '-':
-                            tmp = coor.replace('(', '').replace(')', '').split(':')
-                            start = tmp[0]
-                            end = tmp[1]
-                            
-                            if feature == 'Intergenic':
-                                print(f'{geneid} Other:{feature} HG {start} {end}')
-                            else:
-                                print(f'{geneid} {feature}:{geneid} HG {start} {end}')
-                elif 'P' in method:
-                    for coor in pgc.split(','):
-                        if coor != '-':
-                            tmp = coor.replace('(', '').replace(')', '').split(':')
-                            start = tmp[0]
-                            end = tmp[1]
-                            
-                            if feature == 'Intergenic':
-                                print(f'{geneid} Other:{feature} PG {start} {end}')
-                            else:
-                                print(f'{geneid} {feature}:{geneid} PG {start} {end}')
+        if 'C' in ref:
+            if 'H' in method:
+                for coor in htc.split(','):
+                    if coor != '-':
+                        tmp = coor.replace('(', '').replace(')', '').split(':')
+                        start = tmp[0]
+                        end = tmp[1]
+                        if feature == 'Intergenic':
+                            print(f'{geneid} Other:{feature} HC {start} {end}')
+                        else:
+                            print(f'{geneid} {feature}:{geneid} HC {start} {end}')
+            elif 'P' in method:
+                for coor in ptc.split(','):
+                    if coor != '-':
+                        tmp = coor.replace('(', '').replace(')', '').split(':')
+                        start = tmp[0]
+                        end = tmp[1]
+                        if feature == 'Intergenic':
+                            print(f'{geneid} Other:{feature} PC {start} {end}')
+                        else:
+                            print(f'{geneid} {feature}:{geneid} PC {start} {end}')
+        elif 'F' in ref:
+            if 'H' in method:
+                for coor in hfc.split(','):
+                    if coor != '-':
+                        tmp = coor.replace('(', '').replace(')', '').split(':')
+                        start = tmp[0]
+                        end = tmp[1]
+
+                        if feature == 'Intergenic':
+                            print(f'{geneid} Other:{feature} HF {start} {end}')
+                        else:
+                            print(f'{geneid} {feature}:{geneid} HF {start} {end}')
+            elif 'P' in method:
+                for coor in pfc.split(','):
+                    if coor != '-':
+                        tmp = coor.replace('(', '').replace(')', '').split(':')
+                        start = tmp[0]
+                        end = tmp[1]
+
+                        if feature == 'Intergenic':
+                            print(f'{geneid} Other:{feature} PF {start} {end}')
+                        else:
+                            print(f'{geneid} {feature}:{geneid} PF {start} {end}')
+        elif 'G' in ref:
+            if 'H' in method:
+                for coor in hgc.split(','):
+                    if coor != '-':
+                        tmp = coor.replace('(', '').replace(')', '').split(':')
+                        start = tmp[0]
+                        end = tmp[1]
+
+                        if feature == 'Intergenic':
+                            print(f'{geneid} Other:{feature} HG {start} {end}')
+                        else:
+                            print(f'{geneid} {feature}:{geneid} HG {start} {end}')
+            elif 'P' in method:
+                for coor in pgc.split(','):
+                    if coor != '-':
+                        tmp = coor.replace('(', '').replace(')', '').split(':')
+                        start = tmp[0]
+                        end = tmp[1]
+
+                        if feature == 'Intergenic':
+                            print(f'{geneid} Other:{feature} PG {start} {end}')
+                        else:
+                            print(f'{geneid} {feature}:{geneid} PG {start} {end}')
 
 
 def phasiRNAnalyzer_filter(fo):

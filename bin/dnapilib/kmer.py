@@ -35,13 +35,13 @@ def filter_kmers(kmers, kmer_len, rate):
     i, x = -1, -1
     while x != len(low_comp):
         i += 1
-        x = sum([not p.findall(kmers[i][0]) for p in low_comp])
+        x = sum(not p.findall(kmers[i][0]) for p in low_comp)
     max_hits = kmers[i][1]
 
     clean = []
     total = 0
     for s, n in kmers[i:]:
-        if sum([not p.findall(s) for p in low_comp]) != len(low_comp):
+        if sum(not p.findall(s) for p in low_comp) != len(low_comp):
             continue
         if float(max_hits)/n > rate:
             break

@@ -22,7 +22,7 @@ def Load_PHAS_info(PHAS_Loci_file):
             list.append(tag)
             dic[tag].append(recorder)
             if 'F' not in tag:
-                feature_gene_dic[tag].append(feature + ':' + PHAS_Loci)
+                feature_gene_dic[tag].append(f'{feature}:{PHAS_Loci}')
             else:
                 feature_gene_dic[tag].append(PHAS_Loci)
     return (list, dic, feature_gene_dic)
@@ -33,15 +33,11 @@ def GetCurTime():
     Returns:
         <str> -- formated current localtime
     """
-    ctime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
-    return ctime
+    return time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
 
 def CompleteStrand(x):
-    x_string=''
     rc={"A":"T","T":"A","C":"G","G":"C","N":"N", "a":"t", "t":"a", "c":"g", "g":"c", "n":"n"}
-    for i in range(len(x)):
-        x_string+=rc[x[i]] 
-    return x_string
+    return ''.join(rc[x[i]] for i in range(len(x)))
 
 def nestedDic():
     return defaultdict(nestedDic)
@@ -109,18 +105,15 @@ def LoadallsRNA(sRNA_file, filter_list):
 
 def LoadRef(ref_file):
     dic = nestedDic()
-    if ref_file != '':
-        for query in SeqIO.parse(ref_file, 'fasta'):
-            name = str(query.id)
-            seq = str(query.seq)
-            dic[name] = seq
-        return dic
-    else:
+    if ref_file == '':
         return {}
+    for query in SeqIO.parse(ref_file, 'fasta'):
+        dic[str(query.id)] = str(query.seq)
+    return dic
 
 def Alignment(cdna_ref_dic, gdna_ref_dic, flnc_ref_dic,phasiRNA_dic, fo, phase_length, recorder_dic):
     transcript_PHAS_Gene = nestedDic()
-    transcript_phasiRNA = TwoDepDic() 
+    transcript_phasiRNA = TwoDepDic()
     genome_PHAS_Gene = nestedDic()
     genome_phasiRNA = TwoDepDic()
     flnc_PHAS_Gene = nestedDic()
@@ -135,71 +128,95 @@ def Alignment(cdna_ref_dic, gdna_ref_dic, flnc_ref_dic,phasiRNA_dic, fo, phase_l
                     tmp_recorder = k[3]
                     recorders = recorder_dic[tmp_recorder]
                     for recorder in recorders:
-                        fo.write('>' + recorder + '\t' + "\t".join(k) + '\n')
-                        start_end = []
-                        for e in phasiRNA_dic[i][j][k]:
-                            start_end.append(e[1])
+                        fo.write(f'>{recorder}' + '\t' + "\t".join(k) + '\n')
+                        start_end = [e[1] for e in phasiRNA_dic[i][j][k]]
                         region = sorted(start_end)
                         region1 = (region[0], region[-1] + phase_length)
                         # transcript_PHAS_Gene[k] = PHASGene_seq(cdna_ref_dic[k[0]], region1)
                         transcript_PHAS_Gene[k] = cdna_ref_dic[k[0]]
                         for e in phasiRNA_dic[i][j][k]:
                             if e[0] == "+":
-                                fo.write(f"{'.'*(int(e[1])-int(region[0]))}{e[3]}{'.'*(int(region[-1])-int(e[1]))}" + "______" + k[0] + "\t" + str(e[1])+ "\n")
+                                fo.write(
+                                    f"{'.' * (int(e[1]) - int(region[0]))}{e[3]}{'.' * (int(region[-1]) - int(e[1]))}______{k[0]}"
+                                    + "\t"
+                                    + str(e[1])
+                                    + "\n"
+                                )
                                 transcript_phasiRNA[k]['+'].append(e)
                         seq = cdna_ref_dic[k[0]][int(region[0]):int(region[-1])+phase_length]
                         fo.write(seq + '______excised_seq' "\n")
-                        fo.write(CompleteStrand(seq) + '______anti_seq' + "\n")
+                        fo.write(f'{CompleteStrand(seq)}______anti_seq' + "\n")
                         for e in phasiRNA_dic[i][j][k]:
                             if e[0] == '-':
-                                fo.write(f"{'.'*(int(e[1])-int(region[0]))}{CompleteStrand(e[3])}{'.'*(int(region[-1])-int(e[1]))}" + "______" + k[0] + "\t" + str(e[1])+ "\n")
+                                fo.write(
+                                    f"{'.' * (int(e[1]) - int(region[0]))}{CompleteStrand(e[3])}{'.' * (int(region[-1]) - int(e[1]))}______{k[0]}"
+                                    + "\t"
+                                    + str(e[1])
+                                    + "\n"
+                                )
                                 transcript_phasiRNA[k]['-'].append(e)
             if 'gDNA' in j and gdna_ref_dic != {}:
                 for k in phasiRNA_dic[i][j]:
                     tmp_recorder = k[3]
                     recorders = recorder_dic[tmp_recorder]
                     for recorder in recorders:
-                        fo.write('>' + recorder + '\t' + "\t".join(k) + '\n')
-                        start_end = []
-                        for e in phasiRNA_dic[i][j][k]:
-                            start_end.append(e[1])
+                        fo.write(f'>{recorder}' + '\t' + "\t".join(k) + '\n')
+                        start_end = [e[1] for e in phasiRNA_dic[i][j][k]]
                         region = sorted(start_end)
                         region1 = (region[0], region[-1] + phase_length)
                         genome_PHAS_Gene[k] = PHASGene_seq(gdna_ref_dic[k[0]], region1)
                         for e in phasiRNA_dic[i][j][k]:
                             if e[0] == "+":
-                                fo.write(f"{'.'*(int(e[1])-int(region[0]))}{e[3]}{'.'*(int(region[-1])-int(e[1]))}" + "______" + k[0] + "\t" + str(e[1])+ "\n")
+                                fo.write(
+                                    f"{'.' * (int(e[1]) - int(region[0]))}{e[3]}{'.' * (int(region[-1]) - int(e[1]))}______{k[0]}"
+                                    + "\t"
+                                    + str(e[1])
+                                    + "\n"
+                                )
                                 genome_phasiRNA[k]['+'].append(e)
                         seq = gdna_ref_dic[k[0]][int(region[0]):int(region[-1])+phase_length]
                         fo.write(seq + '______excised_seq' "\n")
-                        fo.write(CompleteStrand(seq) + '______anti_seq' + "\n")
+                        fo.write(f'{CompleteStrand(seq)}______anti_seq' + "\n")
                         for e in phasiRNA_dic[i][j][k]:
                             if e[0] == '-':
-                                fo.write(f"{'.'*(int(e[1])-int(region[0]))}{CompleteStrand(e[3])}{'.'*(int(region[-1])-int(e[1]))}" + "______" + k[0] + "\t" + str(e[1])+ "\n")
+                                fo.write(
+                                    f"{'.' * (int(e[1]) - int(region[0]))}{CompleteStrand(e[3])}{'.' * (int(region[-1]) - int(e[1]))}______{k[0]}"
+                                    + "\t"
+                                    + str(e[1])
+                                    + "\n"
+                                )
                                 genome_phasiRNA[k]['-'].append(e)
             if 'FLNC' in j and flnc_ref_dic != {}:
                 for k in phasiRNA_dic[i][j]:
                     tmp_recorder = k[3]
                     recorders = recorder_dic[tmp_recorder]
                     for recorder in recorders:
-                        fo.write('>' + recorder + '\t' + "\t".join(k) + '\n')
-                        start_end = []
-                        for e in phasiRNA_dic[i][j][k]:
-                            start_end.append(e[1])
+                        fo.write(f'>{recorder}' + '\t' + "\t".join(k) + '\n')
+                        start_end = [e[1] for e in phasiRNA_dic[i][j][k]]
                         region = sorted(start_end)
                         region1 = (region[0], region[-1] + phase_length)
                         # flnc_PHAS_Gene[k] = PHASGene_seq(flnc_ref_dic[k[0]], region1)
                         flnc_PHAS_Gene[k] = flnc_ref_dic[k[0]]
                         for e in phasiRNA_dic[i][j][k]:
                             if e[0] == "+":
-                                fo.write(f"{'.'*(int(e[1])-int(region[0]))}{e[3]}{'.'*(int(region[-1])-int(e[1]))}" + "______" + k[0] + "\t" + str(e[1])+ "\n")
+                                fo.write(
+                                    f"{'.' * (int(e[1]) - int(region[0]))}{e[3]}{'.' * (int(region[-1]) - int(e[1]))}______{k[0]}"
+                                    + "\t"
+                                    + str(e[1])
+                                    + "\n"
+                                )
                                 flnc_phasiRNA[k]['+'].append(e)
                         seq = flnc_ref_dic[k[0]][int(region[0]):int(region[-1])+phase_length]
                         fo.write(seq + '______excised_seq' "\n")
-                        fo.write(CompleteStrand(seq) + '______anti_seq' + "\n")
+                        fo.write(f'{CompleteStrand(seq)}______anti_seq' + "\n")
                         for e in phasiRNA_dic[i][j][k]:
                             if e[0] == '-':
-                                fo.write(f"{'.'*(int(e[1])-int(region[0]))}{CompleteStrand(e[3])}{'.'*(int(region[-1])-int(e[1]))}" + "______" + k[0] + "\t" + str(e[1])+ "\n")
+                                fo.write(
+                                    f"{'.' * (int(e[1]) - int(region[0]))}{CompleteStrand(e[3])}{'.' * (int(region[-1]) - int(e[1]))}______{k[0]}"
+                                    + "\t"
+                                    + str(e[1])
+                                    + "\n"
+                                )
                                 flnc_phasiRNA[k]['-'].append(e)
     return transcript_PHAS_Gene, transcript_phasiRNA, genome_PHAS_Gene, genome_phasiRNA, flnc_PHAS_Gene, flnc_phasiRNA
 
@@ -209,9 +226,8 @@ def PHASGene_seq(seq, region1):
     for num in [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 0]:
         if start - num <= 0:
             continue
-        else:
-            start = start - num
-            break
+        start = start - num
+        break
     for num in [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 0]:
         end = end + num 
         break

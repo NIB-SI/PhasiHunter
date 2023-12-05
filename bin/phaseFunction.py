@@ -14,8 +14,7 @@ def GetCurTime():
     Returns:
         <str> -- formated current localtime
     """
-    ctime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
-    return ctime
+    return time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
 
 def defauldict_list():
     return defaultdict(list)
@@ -67,11 +66,10 @@ def Vprint(string, enable = False, time = True):
     time : bool, optional
         by default True
     """    
-    if time:
-        if enable:
-            print(string + " at " + GetCurTime())
-    else:
-        if enable:
+    if enable:
+        if time:
+            print(f"{string} at {GetCurTime()}")
+        else:
             print(string)
 
 def ParseRef(file: str, type: str, method = ''):
@@ -89,19 +87,18 @@ def ParseRef(file: str, type: str, method = ''):
                 for gdna: {chromesomeID: [start_position, end_position, annotation]}
     """
     dic = {}
-    if type == 'cdna' or type == 'flnc':
+    if type in {'cdna', 'flnc'}:
         for query in SeqIO.parse(file,"fasta"):
             name = query.id
             anno = " ".join((query.description).split(" ")[1:])
             seq = str(query.seq)
             seqLength = len(seq)
-            if name not in dic:
-                if method == 'PhaseScore':
-                    dic[name] = [0, seqLength - 1, seq, anno]
-                else:
-                    dic[name] = [1, seqLength, seq, anno]
-            else:
+            if name in dic:
                 raise AttributeError('exits same transcript in ref sequence fasta file')
+            if method == 'PhaseScore':
+                dic[name] = [0, seqLength - 1, seq, anno]
+            else:
+                dic[name] = [1, seqLength, seq, anno]
         return dic
     elif type == 'gdna':
         for query in SeqIO.parse(file,"fasta"):
@@ -166,20 +163,25 @@ def ParseGff3(file: str):
                 elif len(exonid) == 1:
                     exonid = exonid[0]
                 if feature == 'CDS':
-                    exonid = exonid + '-' + str(start) + '-' + str(end)
+                    exonid = f'{exonid}-{start}-{end}'
                 try:
                     dic[curGrandParentFeature][curParentFeature][curSonFeature][exonid] = {'attribute': [start, end]}
                 except KeyError:
                     try:
-                        curSonFeature = curParentFeature + 'rna'
-                        dic[curGrandParentFeature][curParentFeature][curSonFeature] = {'attribute': [start, end]}
-                        dic[curGrandParentFeature][curParentFeature][curSonFeature][exonid] = {'attribute': [start, end]}
+                        curSonFeature = f'{curParentFeature}rna'
+                        dic[curGrandParentFeature][curParentFeature][
+                            curSonFeature
+                        ] = {
+                            'attribute': [start, end],
+                            exonid: {'attribute': [start, end]},
+                        }
                     except KeyError:
-                        curParentFeature = curGrandParentFeature + 'gene'
+                        curParentFeature = f'{curGrandParentFeature}gene'
                         dic[curGrandParentFeature][curParentFeature] = {'attribute': [start, end]}
-                        curSonFeature = curParentFeature + 'rna'
-                        dic[curGrandParentFeature][curParentFeature][curSonFeature] = {'attribute': [start, end]}
-                        dic[curGrandParentFeature][curParentFeature][curSonFeature][exonid] = 0
+                        curSonFeature = f'{curParentFeature}rna'
+                        dic[curGrandParentFeature][curParentFeature][
+                            curSonFeature
+                        ] = {'attribute': [start, end], exonid: 0}
     return dic
 
 def ReformatsRNAId(map):
@@ -189,12 +191,10 @@ def ReformatsRNAId(map):
         line1=line.split('\t')
         sRNA_seq = line1[4]
         tmp_set.add(sRNA_seq)
-    
-    count = 0
-    for i in tmp_set:
-        count += 1
-        dic[i] = 'seq_' + str(count)
-    
+
+    for count, i in enumerate(tmp_set, start=1):
+        dic[i] = f'seq_{str(count)}'
+
     return dic
 
 def ParseHypergeometricMap(map, phase_length):
@@ -213,9 +213,7 @@ def ParseHypergeometricMap(map, phase_length):
     """
     reformat_sRNAid = ReformatsRNAId(map)
     genewithhits = {}
-    n = 0
-    for line in open(map, 'r'):
-        n+=1
+    for n, line in enumerate(open(map, 'r')):
         line1=line.split('\t')
         sRNA=line1[0]
         #reformat sRNA id
@@ -227,11 +225,10 @@ def ParseHypergeometricMap(map, phase_length):
         strand=line1[1]
         geneid=line1[2]
         sRNA_pos=int(line1[3])
-        sRNA_len = int(len(line1[4]))
+        sRNA_len = len(line1[4])
         key = geneid+'\t'+strand+'\t'+str(sRNA_pos)
-        if (key) in genewithhits.keys():
-            no=float((genewithhits[key]).split('\t')[0])
-            no+=sRNA_num
+        if key in genewithhits:
+            no = float((genewithhits[key]).split('\t')[0]) + sRNA_num
             if sRNA_len == phase_length:
                 genewithhits[key]=str(no)+'\t'+sRNA_id+'\t'+line1[4]+'\t'+str(sRNA_len)
             elif genewithhits[key].split('\t')[3] == str(phase_length):
@@ -269,12 +266,11 @@ def SplitCluster(final_cluster: list, island_number=5, phase_length=21):
         condition_list = [0, 2, 19]
     elif phase_length == 24:
         condition_list = [0, 2, 22]
-    index = 0
     cluster = 1
     list_ = final_cluster[::-1]
     duplication = {}
     elem = list_.pop()
-    index += 1
+    index = 0 + 1
     if cluster not in duplication:
         duplication[cluster] = [elem]
     for i in final_cluster[index:]:
@@ -306,8 +302,7 @@ def PairPos(list_: list):
     for i in loop_list:
         former = list_.pop(0)
         if len(list_) >= 2:
-            out_list.append((former, list_[-1]))
-            out_list.append((former, list_[-2]))
+            out_list.extend(((former, list_[-1]), (former, list_[-2])))
         else:
             break
         laster = list_.pop(-1)
@@ -316,7 +311,7 @@ def PairPos(list_: list):
             out_list.append((laster, list_[1]))
         except IndexError:
             break
-        if len(list_) == 0:
+        if not list_:
             break
     return out_list
 
@@ -342,10 +337,7 @@ def IsOverlap(list1: list, list2: list):
     list1 = set(list(range(a, b+1)))
     list2 = set(list(range(c, d+1)))
     test = list1 & list2
-    if len(test) > 0:
-        return True
-    else:
-        return False
+    return len(test) > 0
 
 def AnnoGdna(dic_: dict, refgff3: dict):
     """ add annotation for gdna based phasiRNA cluster

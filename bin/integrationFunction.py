@@ -10,8 +10,7 @@ def GetCurTime():
     Returns:
         <str> -- formated current localtime
     """
-    ctime = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
-    return ctime
+    return time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
 
 def PrintDic(dic, maxdep, prefix='\t'):
     # WARNING: not suport print list
@@ -20,12 +19,11 @@ def PrintDic(dic, maxdep, prefix='\t'):
         count += 1
         if count > maxdep:
             break
+        if isinstance(dic[i], dict):
+            print(f'{prefix}+ {str(i)}')
+            PrintDic(dic[i], maxdep, f'{prefix}|   ')
         else:
-            if isinstance(dic[i], dict):
-                print(prefix + '+ ' + str(i))
-                PrintDic(dic[i], maxdep, prefix + '|   ')  # 最后一个
-            else:
-                print(prefix + '- ' + str(i) + ' ==> ' + str(dic[i]))
+            print(f'{prefix}- {str(i)} ==> {str(dic[i])}')
 
 def Vprint(string, enable = False, time = True):
     """verbose print
@@ -38,31 +36,26 @@ def Vprint(string, enable = False, time = True):
     time : bool, optional
         by default True
     """    
-    if time:
-        if enable:
-            print(string + " at " + GetCurTime())
-    else:
-        if enable:
+    if enable:
+        if time:
+            print(f"{string} at {GetCurTime()}")
+        else:
             print(string)
 
 def Gff3Tobed(gff3file, outfile):
-    fo = open(outfile, 'w')
-    with open(gff3file, 'r') as fn:
-        for line in fn:
-            l = line.strip().split("\t")
-            if line.startswith("#"):
-                continue
-            chr_, feature, start, end, longstring, strand = l[0], l[2], l[3], l[4], l[8], l[6]
-            if int(start) > int(end): 
-                continue
-            if feature == 'region':
-                continue
-            anno = "-".join(longstring.split(";")[0].split('-')[1:])
-            if anno == '':
-                continue
-            else:
-                fo.write(f'{chr_}\t{start}\t{end}\t{feature}\t{anno}\t{strand}\n')
-    fo.close()
+    with open(outfile, 'w') as fo:
+        with open(gff3file, 'r') as fn:
+            for line in fn:
+                l = line.strip().split("\t")
+                if line.startswith("#"):
+                    continue
+                chr_, feature, start, end, longstring, strand = l[0], l[2], l[3], l[4], l[8], l[6]
+                if int(start) > int(end): 
+                    continue
+                if feature == 'region':
+                    continue
+                if anno := "-".join(longstring.split(";")[0].split('-')[1:]):
+                    fo.write(f'{chr_}\t{start}\t{end}\t{feature}\t{anno}\t{strand}\n')
 
 def nestedDic():
     return defaultdict(nestedDic)
@@ -100,7 +93,7 @@ def LoadData(file):
             l = line.strip().split("\t")
             geneid, strand, pos, abun, sRNAid, seq, seqLen, pvalue, phaseRatio, phaseNumber, phaseAbun, phaseScore, recordMarker = \
                 l[0], l[1], int(l[2]), l[3], l[4], l[5], l[6], l[7], l[8], l[9], l[10], l[11], l[12]
-            category = recordMarker.split('_')[-1][0:2]
+            category = recordMarker.split('_')[-1][:2]
             if category in hc:
                 final_cluster['hc'][geneid].append(pos)
                 final_strand['hc'][geneid][pos] = strand
@@ -154,7 +147,7 @@ def LoadallsiRNA(file):
             l = line.strip().split("\t")
             geneid, strand, pos, abun, sRNAid, seq, seqLen, pvalue, phaseRatio, phaseNumber, phaseAbun, phaseScore, recordMarker = \
                 l[0], l[1], l[2], l[3], l[4], l[5], l[6], l[7], l[8], l[9], l[10], l[11], l[12]
-            category = recordMarker.split('_')[-1][0:2]
+            category = recordMarker.split('_')[-1][:2]
             if category in hc:
                 key = geneid + '\t' + strand + '\t' + pos
                 value = geneid + "\t" + strand + "\t" + pos + "\t" + abun + "\t" + sRNAid + "\t" + seq + "\t" + seqLen + "\t" + phaseRatio + "\t" + phaseNumber + "\t" + phaseAbun + "\t" + phaseScore + "\t" + recordMarker + "\t" + pvalue
@@ -238,12 +231,11 @@ def SplitCluster(final_cluster: list, island_number=5, phase_length=21):
         condition_list = [0, 2, 19]
     elif phase_length ==24:
         condition_list = [0, 2, 22]
-    index = 0
     cluster = 1
     list_ = final_cluster[::-1]
     duplication = {}
     elem = list_.pop()
-    index += 1
+    index = 0 + 1
     if cluster not in duplication:
         duplication[cluster] = [elem]
     for i in final_cluster[index:]:

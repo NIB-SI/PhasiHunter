@@ -16,7 +16,7 @@ def get_file_obj(in_file):
 
     """
     if not os.path.exists(in_file) and in_file != "-":
-        raise Exception("can't open {}".format(in_file))
+        raise Exception(f"can't open {in_file}")
 
     if in_file.find(".tar") > 0:
         if in_file.endswith(".tar.gz"):
